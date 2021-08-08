@@ -87,6 +87,7 @@ class Util: NSObject {
         return Date()
         
     }
+   
     func showPickImageAlert(on: UIViewController, cameraAction:@escaping ()->(), browsAction:@escaping ()->(), cancelAction:@escaping ()->()){
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
 
@@ -132,6 +133,7 @@ class Util: NSObject {
           }
           
       }
+   
 }
 
 class VerticalStackView: UIStackView {

@@ -66,4 +66,18 @@ class DataManager: NSObject {
         }
         return 0
     }
+    func removeEmployee(employee:Employee){
+        do {
+            let realm = try Realm()
+            let items = realm.objects(EmployeeItem.self).filter("id == %i",employee.id ?? 0)
+
+            print("remove local employee")
+            try! realm.write {
+               realm.delete(items)
+           }
+        }catch let error as NSError{
+             print("realm error: \(error)")
+        }
+        
+    }
 }

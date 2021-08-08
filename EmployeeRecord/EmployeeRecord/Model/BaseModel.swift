@@ -9,7 +9,7 @@ import UIKit
 import ObjectMapper
 
 class BaseModel: Mappable {
-    var id : Int? = 0
+    var id : Int = 0
     var updated_at : String? = Util.shared.getDefaultDateStringFromDate(date: Date())
     var created_at : String? = Util.shared.getDefaultDateStringFromDate(date: Date())
 

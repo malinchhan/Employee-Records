@@ -7,29 +7,42 @@
 
 import UIKit
 
-class EmployeesVC: UITableViewController {
+class EmployeesVC: BaseVC {
     var employeeCellID = "employeeCellID"
     var data:[Employee] = []
-    
+
 
     // MARK: - Main functions
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Employees"
+        self.addTableView(frame: screenBound, style: .plain)
         self.tableView.register(EmployeeCell.self, forCellReuseIdentifier: employeeCellID)
         self.view.backgroundColor = UIColor.white
 
-        self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addNewEmployee))
         
         self.tableView.tableFooterView  = UIView()
+        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
+
+        //add plus button
+        let plusBtn = UIButton(frame: CGRect(x: screenBound.width - 90, y: screenBound.height - 120, width: 60, height: 60))
+        plusBtn.setButtonWith(backgroundColor: .navColor(), textColor: .white, text: "+", fontSize: 50)
+        plusBtn.clipsToBounds = true
+        plusBtn.layer.cornerRadius = plusBtn.frame.width/2
+        plusBtn.addTarget(self, action: #selector(self.addNewEmployee), for: .touchUpInside)
+        self.view.addSubview(plusBtn)
+        
+//        self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addNewEmployee))
+        self.refreshDataFromLocalDB()
+
     }
     func refreshDataFromLocalDB (){
         //get data from local db
         self.data = DataManager.shared.getAllEmployees()
         self.tableView.reloadData()
         if data.count == 0 {
-            self.tableView.backgroundView = UILabel(text: "No Data", font: .systemFont(ofSize: 16), color: .black, textAlignment: .center, numberOfLines: 1)
+            self.tableView.backgroundView = UILabel(text: "No Employee", font: .systemFont(ofSize: 16), color: .black, textAlignment: .center, numberOfLines: 1)
         }else{
             self.tableView.backgroundView  = UILabel()
 
@@ -58,7 +71,11 @@ class EmployeesVC: UITableViewController {
 
         return cell
     }
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailVC = NewEmployeeVC()
+        detailVC.employee = self.data[indexPath.row]
+        self.navigationController?.pushViewController(detailVC, animated: false)
+    }
 
     /*
     // Override to support conditional editing of the table view.

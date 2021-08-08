@@ -30,7 +30,7 @@ extension UIButton {
         self.setTitleColor(textColor, for: .selected)
         self.setTitle(text, for: .normal)
         self.setTitle(text, for: .selected)
-        self.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
+        self.titleLabel?.font = UIFont.boldSystemFont(ofSize: fontSize)
         if isRound == true{
             self.layer.cornerRadius = 5
             self.clipsToBounds = true
@@ -295,5 +295,20 @@ struct AnchoredConstraints {
 extension UIStackView {
     func addArrangedSubviews(_ views: UIView...){
         views.forEach{addArrangedSubview($0)}
+    }
+}
+extension UIViewController {
+    func showAlertMessage(title:String?, message: String? , actionTitle:String?, handler:@escaping ()->()){
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: (actionTitle != nil) ? actionTitle:"OK", style: UIAlertAction.Style.default) {
+            UIAlertAction in
+            handler()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { _ in
+            
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
     }
 }

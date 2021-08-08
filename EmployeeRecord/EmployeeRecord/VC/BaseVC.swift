@@ -30,6 +30,7 @@ class BaseVC: UIViewController {
         self.tableView.separatorStyle = .singleLine
         self.tableView.showsVerticalScrollIndicator = false
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
+        self.view.addSubview(self.tableView)
 
     }
     func checkTextField(textField:UITextField) -> Bool {

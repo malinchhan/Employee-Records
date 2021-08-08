@@ -24,16 +24,21 @@ class NewEmployeeVC: BaseVC {
     var textViewAddress : UITextView!
     var textViewHobby : UITextView!
     var imageData:Data?
+    var employee:Employee?
 
-    var dateFormater : DateFormatter {
-        let dateFormater = DateFormatter()
-        dateFormater.dateFormat = "dd MMM yyyy"
-        return dateFormater
-    }
+    let dateFormater = DateFormatter.getDateFormatterWith(format:"dd MMMM yyyy")
+    var allowEditing = true
+    var actionButton : UIButton!
+
     
+    // MARK: - Main functions
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "New Employee"
+        if self.employee != nil {
+            self.title = "Employee detail"
+        }
         // Do any additional setup after loading the view.
         
         imagePicker = UIImagePickerController()
@@ -45,8 +50,26 @@ class NewEmployeeVC: BaseVC {
         scrollView.showsVerticalScrollIndicator = false
         self.view.addSubview(scrollView)
         
+        if self.employee != nil{ //view mode
+            allowEditing = false
+            self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.refreshToEdit))
+
+        }
         self.setupView()
-       
+
+    }
+    @objc func refreshToEdit(){
+        allowEditing = true
+        imageView.isUserInteractionEnabled = true
+        allTextFields.forEach { tf in
+            tf.isUserInteractionEnabled = true
+        }
+        textViewHobby.isEditable = true
+        textViewAddress.isEditable = true
+        allTextFields[0].becomeFirstResponder()
+
+        actionButton.setButtonWith(backgroundColor: UIColor.navColor(), textColor:.white , text: "Update", fontSize: 18, isRound: true)
+        self.navigationItem.rightBarButtonItem = nil
     }
     
     func setupView(){
@@ -58,7 +81,7 @@ class NewEmployeeVC: BaseVC {
         imageView.layer.cornerRadius = imageView.frame.width/2
         imageView.clipsToBounds = true
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageProfileClicked(sender:))))
-        imageView.isUserInteractionEnabled = true
+        imageView.isUserInteractionEnabled = allowEditing
         scrollView.addSubview(imageView)
         yView += 130
 
@@ -66,6 +89,7 @@ class NewEmployeeVC: BaseVC {
             let textField = Util.shared.getFloatingTextFieldWith(frame: CGRect(x: 20, y: yView, width: screenBound.width - 40, height: 65), placeholder: text, title: text)
             textField.delegate = self
             textField.tag = i
+            textField.isUserInteractionEnabled = allowEditing
             scrollView.addSubview(textField)
             if i == 3 || i == 5 || i == 8{
                 let downButton = self.getDownButton()
@@ -93,12 +117,14 @@ class NewEmployeeVC: BaseVC {
 
 
                 let textview = self.getTextview(frame: CGRect(x: 20, y: yView , width:screenBound.width - 40, height:90))
+                textview.isEditable = allowEditing
 
                 if i == 4 { //address
                     textViewAddress = textview
                 }else if  i == 7 { //hobby
                     textViewHobby = textview
                 }
+
                 scrollView.addSubview(textview)
                 
                 yView += textview.frame.size.height + 15
@@ -112,15 +138,48 @@ class NewEmployeeVC: BaseVC {
         }
         yView += 30
 
-        let saveButton = UIButton(frame: CGRect(x: 20, y: yView, width: screenBound.width - 40, height: 50))
-        saveButton.setButtonWith(backgroundColor: UIColor.navColor(), textColor:.white , text: "Save", fontSize: 18, isRound: true)
-        saveButton.addTarget(self, action: #selector(self.saveClicked(sender:)), for: .touchUpInside)
-        scrollView.addSubview(saveButton)
+        
+        actionButton = UIButton(frame: CGRect(x: 20, y: yView, width: screenBound.width - 40, height: 50))
+        actionButton.setButtonWith(backgroundColor: UIColor.navColor(), textColor:.white , text: self.employee == nil ? "Save" : "Update", fontSize: 18, isRound: true)
+        actionButton.addTarget(self, action: #selector(self.actionButtonClicked(sender:)), for: .touchUpInside)
+
+        if self.allowEditing == false {
+            //show delete button when view detail
+            actionButton.setButtonWith(backgroundColor: UIColor.red, textColor:.white , text: "Delete", fontSize: 18, isRound: true)
+        }
+        scrollView.addSubview(actionButton)
         yView += 80
         screenHeight = yView
 
         self.scrollView.contentSize = CGSize(width: scrollView.frame.width, height: yView)
 //        allTextFields[0].becomeFirstResponder()
+        
+        if self.employee != nil{
+            //show employee detail info
+            
+            if let dataProfile = AppManager.shared.getMediaData(pathName: "image" + "\(employee?.id ?? 0)"){
+                employee?.imageData = dataProfile
+                imageView.image = UIImage(data: dataProfile)
+                imageData = dataProfile
+            }
+            allTextFields[0].text = employee?.firstName
+            allTextFields[1].text = employee?.middleName
+            allTextFields[2].text = employee?.lastName
+            allTextFields[3].text = employee?.provinceOrCity
+            allTextFields[5].text = employee?.gender
+            allTextFields[8].text = employee?.book
+            
+            //address and hobby
+            textViewAddress.text = employee?.address
+            textViewHobby.text = employee?.hobby
+            
+            if let dob = employee?.dob {
+                let dobDate = Util.shared.getDateFromString(dateStr: dob)
+                datePickerDOB.date  = dobDate
+                allTextFields[6].text = dateFormater.string(from: dobDate)
+
+            }
+        }
         
     }
     @objc func imageProfileClicked(sender:UITapGestureRecognizer) {
@@ -208,8 +267,14 @@ class NewEmployeeVC: BaseVC {
         }
     }
 
-
-    @objc func saveClicked(sender:UIButton){
+    @objc func deleteClicked(sender:UIButton){
+        self.showAlertMessage(title: nil, message: "Delete this employee ?", actionTitle: "Delete") {
+            //delete local data
+            DataManager.shared.removeEmployee(employee: self.employee!)
+            self.navigationController?.popViewController(animated: false)
+        }
+    }
+    @objc func actionButtonClicked(sender:UIButton){
         //    • Profile Image* 
         //    • First Name*  
         //    • Middle Name
@@ -228,6 +293,11 @@ class NewEmployeeVC: BaseVC {
              over the text field. Please define the list of Province / City by yourself
              
              */
+        
+        if self.allowEditing == false && self.employee != nil {
+            self.deleteClicked(sender: sender)
+            return
+        }
         if imageData == nil {
             Util.showError(text: "Profile image is required !")
             return
@@ -241,30 +311,51 @@ class NewEmployeeVC: BaseVC {
             }
 
         }
-        print("save employee data")
-        let jsonData:[String:String] = [
+        
+        var jsonData:[String:String] = [
             "firstName":allTextFields[0].text!,
             "middleName":allTextFields[1].text!,
             "lastName":allTextFields[2].text!,
             "provinceOrCity":allTextFields[3].text!,
-            "address":allTextFields[4].text!,
+            "address":textViewAddress.text ?? "",
             "gender":allTextFields[5].text!,
-            "dob":allTextFields[6].text!,
-            "hobby":allTextFields[7].text!,
+            "hobby":textViewHobby.text ?? "",
             "book":allTextFields[8].text!,
         ]
+        if let dob = allTextFields[6].text , dob.count > 0{
+            let newDateFormatter = DateFormatter.getDateFormatterWith(format: "yyyy-MM-dd")
+            jsonData["dob"] = newDateFormatter.string(from: datePickerDOB.date)
+        }
+        
         print("json data: \(jsonData)")
 
-        if let employee = Mapper<Employee>().map(JSON:jsonData) {
+        if let currentEmployee = Mapper<Employee>().map(JSON:jsonData) {
+            self.hideAllKeyboards()
             
             if let data = imageView.image?.jpegData(compressionQuality: 0.5) {
-                let count = DataManager.shared.countEmployees()
-                employee.id = count
-                AppManager.shared.saveMediaData(pathName: "image" + "\(count)", data: data)
-            }
-            DataManager.shared.addEmployee(employee: employee)
-            self.navigationController?.popViewController(animated: false)
+                let imageFileName =  "image"
+                if employee == nil { //new employee
+                    let count = DataManager.shared.countEmployees()
+                    currentEmployee.id = count
+                    AppManager.shared.saveMediaData(pathName: imageFileName + "\(count)", data: data)
 
+                }else{
+                    AppManager.shared.saveMediaData(pathName: imageFileName + "\(employee!.id)", data: data)
+
+                }
+              
+            }
+            if employee != nil {
+                currentEmployee.id = employee!.id
+                currentEmployee.created_at = employee?.created_at
+            }
+            
+            DataManager.shared.addEmployee(employee: currentEmployee)
+            if employee == nil {
+                self.navigationController?.popViewController(animated: false)
+            }else{
+                Util.showToast(text: "Employee information updated !")
+            }
         }
                 
     }
