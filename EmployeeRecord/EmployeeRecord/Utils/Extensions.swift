@@ -9,9 +9,9 @@ import Foundation
 
 
 extension UIColor {
-    static func navColor() -> UIColor {
-        return UIColor.systemBlue
-    }
+//    static func navColor() -> UIColor {
+//        return UIColor.defaultBlueColor()
+//    }
     static func lighterGrayColor() -> UIColor {
         return Util.colorHexString(hex: "#FAFAFA")
     }
@@ -47,8 +47,8 @@ extension UITextField {
         let doneBtn = UIBarButtonItem(title: "Done", style: .plain, target: onDone.target, action: onDone.action)
         doneBtn.tag = self.tag
         let cancelBtn = UIBarButtonItem(title: "Cancel", style: .plain, target: onCancel.target, action:onCancel.action)
-        cancelBtn.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.navColor()], for: .normal)
-        doneBtn.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.navColor()], for: .normal)
+        cancelBtn.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.defaultBlueColor()], for: .normal)
+        doneBtn.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.defaultBlueColor()], for: .normal)
         
         toolbar.items = [
             cancelBtn,
@@ -65,7 +65,7 @@ extension UITextField {
         let toolbar: UIToolbar = UIToolbar()
         toolbar.barStyle = .default
         let doneBtn = UIBarButtonItem(title: "Done", style: .plain, target: onDone.target, action: onDone.action)
-        doneBtn.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.navColor()], for: .normal)
+        doneBtn.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.defaultBlueColor()], for: .normal)
         
         toolbar.items = [
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),

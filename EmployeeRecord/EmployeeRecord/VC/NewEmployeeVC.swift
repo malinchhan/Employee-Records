@@ -68,7 +68,7 @@ class NewEmployeeVC: BaseVC {
         textViewAddress.isEditable = true
         allTextFields[0].becomeFirstResponder()
 
-        actionButton.setButtonWith(backgroundColor: UIColor.navColor(), textColor:.white , text: "Update", fontSize: 18, isRound: true)
+        actionButton.setButtonWith(backgroundColor: UIColor.defaultBlueColor(), textColor:.white , text: "Update", fontSize: 18, isRound: true)
         self.navigationItem.rightBarButtonItem = nil
     }
     
@@ -140,7 +140,7 @@ class NewEmployeeVC: BaseVC {
 
         
         actionButton = UIButton(frame: CGRect(x: 20, y: yView, width: screenBound.width - 40, height: 50))
-        actionButton.setButtonWith(backgroundColor: UIColor.navColor(), textColor:.white , text: self.employee == nil ? "Save" : "Update", fontSize: 18, isRound: true)
+        actionButton.setButtonWith(backgroundColor: UIColor.systemBlue, textColor:.white , text: self.employee == nil ? "Save" : "Update", fontSize: 18, isRound: true)
         actionButton.addTarget(self, action: #selector(self.actionButtonClicked(sender:)), for: .touchUpInside)
 
         if self.allowEditing == false {
@@ -442,6 +442,13 @@ extension NewEmployeeVC:UITextFieldDelegate {
             }
             self.scrollView.contentSize = CGSize(width: scrollView.frame.width, height: screenHeight )
 
+            return
+        }
+        if textField.tag == allTextFields[titles.count - 1].tag { //go to book lists screen
+            self.hideAllKeyboards()
+            
+            let nav = UINavigationController(rootViewController: BestSellersVC())
+            self.present(nav, animated: false, completion: nil)
             return
         }
       

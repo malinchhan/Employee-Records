@@ -14,12 +14,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow()
-        UINavigationBar.appearance().barTintColor = UIColor.systemBlue
-        UINavigationBar.appearance().tintColor = UIColor.white
-        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white,NSAttributedString.Key.font:UIFont.boldSystemFont(ofSize: 20)]
+        UINavigationBar.appearance().barTintColor = UIColor.white
+        UINavigationBar.appearance().tintColor = UIColor.defaultBlueColor()
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.defaultBlueColor(),NSAttributedString.Key.font:UIFont.boldSystemFont(ofSize: 20)]
         
-        UIBarButtonItem.appearance().tintColor = .white
-        self.window?.tintColor = UIColor.systemBlue
+        UIBarButtonItem.appearance().tintColor = UIColor.defaultBlueColor()
         window?.backgroundColor = UIColor.white
         
         

@@ -18,11 +18,11 @@ class Util: NSObject {
         textField.font = UIFont.systemFont(ofSize: 15)
         textField.titleFont = UIFont.systemFont(ofSize: 15)
         
-        textField.tintColor = UIColor.navColor()
+        textField.tintColor = UIColor.defaultBlueColor()
         textField.textColor = .black
         textField.lineColor = UIColor.lightGray
-        textField.selectedTitleColor = UIColor.navColor()
-        textField.selectedLineColor = UIColor.navColor()
+        textField.selectedTitleColor = UIColor.defaultBlueColor()
+        textField.selectedLineColor = UIColor.defaultBlueColor()
         
         textField.lineHeight = 0.5 // bottom line height in points
         textField.selectedLineHeight = 1.0
@@ -120,6 +120,11 @@ class Util: NSObject {
           }
           
       }
+    public static func hideIndicator(){
+        DispatchQueue.main.async {
+            FTIndicator.dismissProgress()
+        }
+    }
       public  static func showToast(text:String = ""){
           DispatchQueue.main.async {
               FTIndicator.showToastMessage(text)

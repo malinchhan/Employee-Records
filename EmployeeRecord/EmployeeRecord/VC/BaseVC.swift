@@ -11,6 +11,8 @@ class BaseVC: UIViewController {
     let screenBound = UIScreen.main.bounds
     var tableView:UITableView!
     var cellID = "cellID"
+    var searchController : UISearchController!
+    var searchText:String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +32,8 @@ class BaseVC: UIViewController {
         self.tableView.separatorStyle = .singleLine
         self.tableView.showsVerticalScrollIndicator = false
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
+        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
+
         self.view.addSubview(self.tableView)
 
     }
@@ -48,7 +52,41 @@ class BaseVC: UIViewController {
         }
         return true
     }
-   
+    func setupSearchControlller(){
+        
+        self.searchController = UISearchController(searchResultsController: nil)
+//        definesPresentationContext = true
+        self.searchController.searchResultsUpdater = self
+        self.searchController.delegate = self
+//        navigationItem.titleView = searchController.searchBar
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.delegate = self
+        searchController.searchBar.searchBarStyle = .prominent
+        
+
+        //update textfield font
+        let textFieldInSearchBar = self.searchController.searchBar.value(forKey: "searchField") as? UITextField
+        textFieldInSearchBar?.font = UIFont.systemFont(ofSize: 18)
+        textFieldInSearchBar?.textColor = UIColor.black
+        textFieldInSearchBar?.backgroundColor = .white
+        let placeHolder = textFieldInSearchBar?.value(forKey: "placeholderLabel") as? UILabel
+        placeHolder?.font  = UIFont.systemFont(ofSize: 15)
+        placeHolder?.textColor = UIColor.defaultBlueColor().withAlphaComponent(0.8)
+        placeHolder?.text = "Search"
+
+//        remove search icon
+//        textFieldInSearchBar!.leftViewMode = .never
+
+//        //update cursor color
+        searchController.searchBar.tintColor = UIColor.gray
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = UIColor.gray
+
+        //update cancel color
+        let cancelButtonAttributes = [NSAttributedString.Key.foregroundColor: UIColor.defaultBlueColor()]
+        UIBarButtonItem.appearance().setTitleTextAttributes(cancelButtonAttributes , for: .normal)
+        
+    }
 }
 // MARK: - Table view data source
 extension BaseVC:UITableViewDelegate,UITableViewDataSource{
@@ -66,4 +104,44 @@ extension BaseVC:UITableViewDelegate,UITableViewDataSource{
             let cell = DefaultTableViewCell.init(style: .default, reuseIdentifier: cellID)
             return cell
         }
+}
+extension  BaseVC :  UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate {
+    func updateSearchResults(for searchController: UISearchController) {
+        print("search text: \(searchController.searchBar.text)")
+
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar){
+        print("search text: \(searchBar.text)")
+        self.searchText = searchBar.text!
+        self.searchController.searchBar.endEditing(true)
+        
+    }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar){
+        print("cancel click")
+        searchController.searchBar.showsCancelButton = false
+
+        searchBar.endEditing(true)
+        self.view.endEditing(true)
+        searchBar.text = ""
+        self.searchText = ""
+        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
+        
+    }
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool{
+        searchController.searchBar.showsCancelButton = true
+        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 400, right: 0)
+        self.tableView.reloadData()
+
+        return true
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+//            print("cross clicked")
+            searchBar.resignFirstResponder()
+        }
+//        print("search text changed: \(searchText)")
+    }
+    
 }

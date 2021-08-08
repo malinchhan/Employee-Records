@@ -39,28 +39,44 @@ class EmployeeCell: DefaultTableViewCell {
     override func setupContents() {
         self.textLabel?.textColor = UIColor.black
         backgroundColor = .white
-        profileImageView.constrainWidth(80)
-        profileImageView.constrainHeight(80)
-        profileImageView.contentMode = .scaleAspectFill
+        self.profileImageView.frame = CGRect(x: 20, y: 10, width: 80, height: 80)
+        self.addSubview(profileImageView)
         
+        self.nameLbl.frame = CGRect(x: 110, y: 10, width: screenBound.width - 120, height: 25)
+        self.addSubview(nameLbl)
+
+        self.genderLbl.frame = CGRect(x: 110, y: 35, width: screenBound.width - 120, height: 25)
+        self.addSubview(genderLbl)
+
+        self.dateLbl.frame = CGRect(x: 110, y: 60, width: screenBound.width - 120, height: 30)
+        self.addSubview(dateLbl)
+        
+//        profileImageView.constrainWidth(80)
+//        profileImageView.constrainHeight(80)
+        profileImageView.contentMode = .scaleAspectFill
+
         nameLbl.textColor =  UIColor.black
         dateLbl.textColor = .darkGray
-        dateLbl.constrainHeight(20)
+//        dateLbl.constrainHeight(20)
         dateLbl.textAlignment = .right
+//
+//        let verticalStack = VerticalStackView(arrangedSubviews: [
+//                    nameLbl,
+//                    genderLbl,
+//                    dateLbl
+//                ])
+//        verticalStack.distribution = .fillEqually
+//        verticalStack.spacing = 10
+//
+//
+//        let stack = UIStackView(arrangedSubviews: [profileImageView,verticalStack])
+//        stack.spacing = 10
+//        addSubview(stack)
+//        stack.fillSuperview(padding: .init(top: 10, left: 20, bottom: 10, right: 20))
         
-        let verticalStack = VerticalStackView(arrangedSubviews: [
-                    nameLbl,
-                    genderLbl,
-                    dateLbl
-                ])
-        verticalStack.distribution = .fillEqually
-        verticalStack.spacing = 10
+      
 
-    
-        let stack = UIStackView(arrangedSubviews: [profileImageView,verticalStack])
-        stack.spacing = 10
-        addSubview(stack)
-        stack.fillSuperview(padding: .init(top: 10, left: 20, bottom: 10, right: 20))
+
     }
 
 }

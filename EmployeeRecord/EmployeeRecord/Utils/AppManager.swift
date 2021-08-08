@@ -47,40 +47,37 @@ class AppManager: NSObject {
             print("error to get media data")
         }
     }
-    func getJsonData(pathName:String) ->  [String:Any]?{
-        let directory = getDocumentsDirectory()
-        if directory == nil {
-            return nil
-        }
-        let fullPath = directory.appendingPathComponent(pathName)
+  
+    func getJsonArrayData(pathName:String) -> [[String:Any]]{
+        let fullPath = getDocumentsDirectory().appendingPathComponent(pathName)
         
         do {
-            if let json = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(Data(contentsOf: fullPath)) as? [String:Any]{
-                return json
+            if let jsonArr = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(Data(contentsOf: fullPath)) as? [[String:Any]]{
+                return jsonArr
             }
-            
         }catch {
-            return nil
+            return []
         }
-        return nil
+        return []
     }
-    func saveJsonData(pathName:String,json:[String:Any]){
-        let fullPath = getDocumentsDirectory().appendingPathComponent(pathName)
-        do {
-            if #available(iOS 11.0, *) {
-                let data = try NSKeyedArchiver.archivedData(withRootObject: json, requiringSecureCoding: false)
-                try data.write(to: fullPath)
-            } else {
-                // Fallback on earlier versions
-                
-                let data = try NSKeyedArchiver.archivedData(withRootObject: json)
-                try data.write(to: fullPath)
-            }
-            
-        }catch {
-            print("error to get data")
-        }
-    }
-    
+   
+    func saveJsonDataArray(pathName:String,jsonArray:[[String:Any]]){
+       let fullPath = getDocumentsDirectory().appendingPathComponent(pathName)
+       
+       do {
+           if #available(iOS 11.0, *) {
+               let data = try NSKeyedArchiver.archivedData(withRootObject: jsonArray, requiringSecureCoding: false)
+               try data.write(to: fullPath)
+           } else {
+               // Fallback on earlier versions
+               
+               let data = try NSKeyedArchiver.archivedData(withRootObject: jsonArray)
+               try data.write(to: fullPath)
+           }
+           
+       }catch {
+           print("error to get data")
+       }
+   }
     
 }

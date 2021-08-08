@@ -9,7 +9,6 @@ import UIKit
 import ObjectMapper
 
 class Employee: BaseModel {
-   
     
     //    • Profile Image* 
     //    • First Name*  
