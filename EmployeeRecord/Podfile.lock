@@ -1,20 +1,74 @@
 PODS:
+  - Alamofire (4.9.1)
   - DropDown (2.3.13)
+  - FTIndicator (1.2.9):
+    - FTIndicator/FTNotificationIndicator (= 1.2.9)
+    - FTIndicator/FTProgressIndicator (= 1.2.9)
+    - FTIndicator/FTToastIndicator (= 1.2.9)
+  - FTIndicator/FTNotificationIndicator (1.2.9)
+  - FTIndicator/FTProgressIndicator (1.2.9)
+  - FTIndicator/FTToastIndicator (1.2.9)
+  - HexColors (2.3.0)
+  - Moya (12.0.1):
+    - Moya/Core (= 12.0.1)
+  - Moya/Core (12.0.1):
+    - Alamofire (~> 4.1)
+    - Result (~> 4.0)
+  - ObjectMapper (3.5.3)
+  - Realm (10.9.0):
+    - Realm/Headers (= 10.9.0)
+  - Realm/Headers (10.9.0)
+  - RealmSwift (10.9.0):
+    - Realm (= 10.9.0)
+  - Result (4.1.0)
   - SkyFloatingLabelTextField (3.8.0)
+  - TSMessages (0.9.13):
+    - HexColors (~> 2.3.0)
 
 DEPENDENCIES:
   - DropDown
+  - FTIndicator
+  - Moya (~> 12.0)
+  - ObjectMapper (~> 3.4)
+  - RealmSwift
   - SkyFloatingLabelTextField (~> 3.0)
+  - TSMessages (from `https://github.com/KrauseFx/TSMessages.git`)
 
 SPEC REPOS:
   trunk:
+    - Alamofire
     - DropDown
+    - FTIndicator
+    - HexColors
+    - Moya
+    - ObjectMapper
+    - Realm
+    - RealmSwift
+    - Result
     - SkyFloatingLabelTextField
 
-SPEC CHECKSUMS:
-  DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
-  SkyFloatingLabelTextField: 5a338412114808e961fe2d14ea2c5452c8b6e4aa
+EXTERNAL SOURCES:
+  TSMessages:
+    :git: https://github.com/KrauseFx/TSMessages.git
 
-PODFILE CHECKSUM: 693dc3a903b5f2d8aec84e2be0eb9011aed88a7f
+CHECKOUT OPTIONS:
+  TSMessages:
+    :commit: e4802d290362c87ba8a35c1afae88668dba8ab9a
+    :git: https://github.com/KrauseFx/TSMessages.git
+
+SPEC CHECKSUMS:
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
+  FTIndicator: f7f071fd159e5befa1d040a9ef2e3ab53fa9322c
+  HexColors: 6ad3947c3447a055a3aa8efa859def096351fe5f
+  Moya: cf730b3cd9e005401ef37a85143aa141a12fd38f
+  ObjectMapper: 97111c97e054a6ee25917662106689f0b4127b37
+  Realm: 9feef41ab8230ed706c4dc503fc292594915bf9a
+  RealmSwift: 91246183b772e0ea1bf777116c4b8d9939f983b3
+  Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
+  SkyFloatingLabelTextField: 5a338412114808e961fe2d14ea2c5452c8b6e4aa
+  TSMessages: eb3cf27b6900684a21bad4fe9ea426e287b8c839
+
+PODFILE CHECKSUM: b4b6aa851b4fb49fdbdeb1557e54c4dc3a7c2cae
 
 COCOAPODS: 1.10.1

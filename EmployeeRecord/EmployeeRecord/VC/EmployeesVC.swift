@@ -9,6 +9,7 @@ import UIKit
 
 class EmployeesVC: UITableViewController {
     var employeeCellID = "employeeCellID"
+    var data:[Employee] = []
     
 
     // MARK: - Main functions
@@ -20,24 +21,40 @@ class EmployeesVC: UITableViewController {
         self.view.backgroundColor = UIColor.white
 
         self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addNewEmployee))
+        
+        self.tableView.tableFooterView  = UIView()
+    }
+    func refreshDataFromLocalDB (){
+        //get data from local db
+        self.data = DataManager.shared.getAllEmployees()
+        self.tableView.reloadData()
+        if data.count == 0 {
+            self.tableView.backgroundView = UILabel(text: "No Data", font: .systemFont(ofSize: 16), color: .black, textAlignment: .center, numberOfLines: 1)
+        }else{
+            self.tableView.backgroundView  = UILabel()
+
+        }
     }
     @objc func addNewEmployee(){
         self.navigationController?.pushViewController(NewEmployeeVC(), animated: false)
     }
-    
+    override func viewDidAppear(_ animated: Bool) {
+        self.refreshDataFromLocalDB()
+
+    }
 
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return data.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: employeeCellID, for: indexPath) as! EmployeeCell
-        cell.textLabel?.text = "Name"
+        cell.employee = self.data[indexPath.row]
 
         return cell
     }

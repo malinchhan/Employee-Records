@@ -8,29 +8,11 @@
 import UIKit
 import SkyFloatingLabelTextField
 import DropDown
+import ObjectMapper
 
 class NewEmployeeVC: BaseVC {
-
-//    • Profile Image* 
-//    • First Name*  
-//    • Middle Name
-//    • Last Name*
-//    • Province / City*
-//    • Address
-//    • Gender*
-//    • DOB
-//    • Hobby
-//    • Favorite book*
     
-    /*
-     1. (*)thisfieldismandatory.
-     2. Address and Hobby should be multiple line text input with 4-line max.
-     3. Province/CityandFavoritebookshouldbesearchableanddisplayasapopover
-     over the text field. Please define the list of Province / City by yourself
-     
-     */
-    
-    var titles:[String] = ["First name","Middle Name","Last Name", "Province / City","","Gender","DOB","","Favorite book"]
+    var titles:[String] = ["First name*","Middle Name","Last Name*", "Province / City*","","Gender*","DOB","","Favorite book*"]
     var titleLbl : UILabel!
     var screenHeight:CGFloat = 0
     var allTextFields:[SkyFloatingLabelTextField] = []
@@ -41,7 +23,7 @@ class NewEmployeeVC: BaseVC {
     var  genderDropDown : DropDown!
     var textViewAddress : UITextView!
     var textViewHobby : UITextView!
-
+    var imageData:Data?
 
     var dateFormater : DateFormatter {
         let dateFormater = DateFormatter()
@@ -68,10 +50,18 @@ class NewEmployeeVC: BaseVC {
     }
     
     func setupView(){
-        for view in scrollView.subviews {
-            view.removeFromSuperview()
-        }
         var yView:CGFloat = 20
+
+        imageView = UIImageView(frame: CGRect(x:screenBound.width/2 - 50, y:yView , width: 120, height: 120))
+        imageView.image = UIImage(named: "default-user")
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = imageView.frame.width/2
+        imageView.clipsToBounds = true
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageProfileClicked(sender:))))
+        imageView.isUserInteractionEnabled = true
+        scrollView.addSubview(imageView)
+        yView += 130
+
         for (i, text) in self.titles.enumerated() {
             let textField = Util.shared.getFloatingTextFieldWith(frame: CGRect(x: 20, y: yView, width: screenBound.width - 40, height: 65), placeholder: text, title: text)
             textField.delegate = self
@@ -132,6 +122,21 @@ class NewEmployeeVC: BaseVC {
         self.scrollView.contentSize = CGSize(width: scrollView.frame.width, height: yView)
 //        allTextFields[0].becomeFirstResponder()
         
+    }
+    @objc func imageProfileClicked(sender:UITapGestureRecognizer) {
+        
+        Util.shared.showPickImageAlert(on: self, cameraAction: {
+            //show camera
+            self.imagePicker.sourceType = .camera
+            self.present(self.imagePicker, animated: true, completion: nil)
+        }, browsAction: {
+            //show gallery
+            self.imagePicker.sourceType = .photoLibrary
+            self.present(self.imagePicker, animated: true, completion: nil)
+            
+        }) {
+            //cancel click
+        }
     }
     func getTextview(frame:CGRect)->UITextView{
         let textView = UITextView(frame: frame)
@@ -205,8 +210,63 @@ class NewEmployeeVC: BaseVC {
 
 
     @objc func saveClicked(sender:UIButton){
-          
-         
+        //    • Profile Image* 
+        //    • First Name*  
+        //    • Middle Name
+        //    • Last Name*
+        //    • Province / City*
+        //    • Address
+        //    • Gender*
+        //    • DOB
+        //    • Hobby
+        //    • Favorite book*
+            
+            /*
+             1. (*)thisfieldismandatory.
+             2. Address and Hobby should be multiple line text input with 4-line max.
+             3. Province/CityandFavoritebookshouldbesearchableanddisplayasapopover
+             over the text field. Please define the list of Province / City by yourself
+             
+             */
+        if imageData == nil {
+            Util.showError(text: "Profile image is required !")
+            return
+        }
+        for tf in allTextFields {
+            if tf.placeholder == "" || tf.tag == 1 || tf.tag == 4 || tf.tag == 6 || tf.tag == 7 {
+                continue
+            }
+            if self.checkTextField(textField: tf) == false {
+                return
+            }
+
+        }
+        print("save employee data")
+        let jsonData:[String:String] = [
+            "firstName":allTextFields[0].text!,
+            "middleName":allTextFields[1].text!,
+            "lastName":allTextFields[2].text!,
+            "provinceOrCity":allTextFields[3].text!,
+            "address":allTextFields[4].text!,
+            "gender":allTextFields[5].text!,
+            "dob":allTextFields[6].text!,
+            "hobby":allTextFields[7].text!,
+            "book":allTextFields[8].text!,
+        ]
+        print("json data: \(jsonData)")
+
+        if let employee = Mapper<Employee>().map(JSON:jsonData) {
+            
+            if let data = imageView.image?.jpegData(compressionQuality: 0.5) {
+                let count = DataManager.shared.countEmployees()
+                employee.id = count
+                AppManager.shared.saveMediaData(pathName: "image" + "\(count)", data: data)
+            }
+            DataManager.shared.addEmployee(employee: employee)
+            self.navigationController?.popViewController(animated: false)
+
+        }
+                
     }
 
     func addDatePickerForTextfield(textfield:SkyFloatingLabelTextField, from : Date = Date(), to: Date = Date()){
@@ -261,23 +321,18 @@ extension NewEmployeeVC: UIImagePickerControllerDelegate, UINavigationController
         
 //        let editedImage = info[UIImagePickerController.InfoKey.editedImage] as! UIImage //if allow editing = true
         let editedImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-        let imageData  = editedImage.jpegData(compressionQuality: 0.5)
+        imageData  = editedImage.jpegData(compressionQuality: 0.5)
         if imageData == nil {
             return
         }
         let newImage = UIImage(data: imageData!)
-        
-        self.updateImageProfile(newImage: newImage!)
-       
-       
-    }
-    func updateImageProfile(newImage:UIImage ){
         DispatchQueue.main.async {
             self.imageView.image = newImage
 
         }
-
+       
     }
+   
 }
    
 extension NewEmployeeVC:UITextFieldDelegate {
@@ -294,6 +349,7 @@ extension NewEmployeeVC:UITextFieldDelegate {
                 self.hideAllKeyboards()
                 genderDropDown.show()
             }
+            self.scrollView.contentSize = CGSize(width: scrollView.frame.width, height: screenHeight )
 
             return
         }

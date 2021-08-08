@@ -32,7 +32,21 @@ class BaseVC: UIViewController {
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
 
     }
+    func checkTextField(textField:UITextField) -> Bool {
+       
+        if textField.text?.trimmingCharacters(in: .whitespaces).count == 0 || textField.text == "" || textField.text == nil {
 
+            var text  = textField.placeholder ?? ""
+            if text == "" {
+                return true 
+            }
+            text = text.replacingOccurrences(of: "*", with: "")
+            Util.showError(text:text + " is required !")
+            textField.becomeFirstResponder()
+            return false
+        }
+        return true
+    }
    
 }
 // MARK: - Table view data source

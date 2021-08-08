@@ -7,6 +7,8 @@
 
 import UIKit
 import  SkyFloatingLabelTextField
+import FTIndicator
+import TSMessages
 
 class Util: NSObject {
     public static let shared = Util()
@@ -54,74 +56,104 @@ class Util: NSObject {
             alpha: CGFloat(1.0)
         )
     }
-
-}
-
-extension UIColor {
-    static func navColor() -> UIColor {
-        return UIColor.systemBlue
+    func getDefaultDateStringFromDate(date: Date) -> String {
+        let dateFormater = self.getDateFormatter()
+        return dateFormater.string(from: date)
+        
     }
-    static func lighterGrayColor() -> UIColor {
-        return Util.colorHexString(hex: "#FAFAFA")
-    }
-    static func lightGrayColor() -> UIColor {
-        return Util.colorHexString(hex: "#F0F0F0")
-    }
-}
-extension UIButton {
-    func setButtonWith(backgroundColor:UIColor, textColor:UIColor,text:String,fontSize:CGFloat, isRound:Bool? = false){
-        self.backgroundColor = backgroundColor
-        self.setTitleColor(textColor, for: .normal)
-        self.setTitleColor(textColor, for: .selected)
-        self.setTitle(text, for: .normal)
-        self.setTitle(text, for: .selected)
-        self.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
-        if isRound == true{
-            self.layer.cornerRadius = 5
-            self.clipsToBounds = true
+    func getDateFormatter(no_time:Bool? = false)-> DateFormatter{
+        let dateFormater = DateFormatter()
+        if no_time == false {
+            dateFormater.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        }else{
+            dateFormater.dateFormat = "yyyy-MM-dd"
         }
+        dateFormater.timeZone = NSTimeZone.init(name: "Asia/Phnom_Penh") as TimeZone?
+        dateFormater.locale = NSLocale(localeIdentifier: "en") as Locale
+//        dateFormater.locale = NSLocale(localeIdentifier: "km") as Locale //khmer locale
+
+        return dateFormater
     }
+    func getDateFromString(dateStr: String) -> Date {
+        var noTime = false
+        if dateStr.count == 10 {
+            noTime = true
+        }
+        let dateFormater = self.getDateFormatter(no_time: noTime)
+        if let date = dateFormater.date(from: dateStr) {
+            return date
+        }
+        
+        return Date()
+        
+    }
+    func showPickImageAlert(on: UIViewController, cameraAction:@escaping ()->(), browsAction:@escaping ()->(), cancelAction:@escaping ()->()){
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
+
+        let cancel = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.destructive) {
+            UIAlertAction in
+            cancelAction()
+        }
+        
+        let camera = UIAlertAction(title: "Camera", style: UIAlertAction.Style.default) {
+            UIAlertAction in
+            cameraAction()
+        }
+        let browse = UIAlertAction(title: "Gallery", style: UIAlertAction.Style.default) {
+            UIAlertAction in
+            browsAction()
+        }
+        alertController.addAction(camera)
+        alertController.addAction(browse)
+        alertController.addAction(cancel)
+        
+        camera.setValue(UIColor.defaultBlueColor(), forKey: "titleTextColor")
+        browse.setValue(UIColor.defaultBlueColor(), forKey: "titleTextColor")
+        on.present(alertController, animated: false, completion: nil)
+        
+    }
+    
+      public  static func showIndicator(text:String = ""){
+          DispatchQueue.main.async {
+               FTIndicator.showProgress(withMessage:text, userInteractionEnable: false)
+          }
+          
+      }
+      public  static func showToast(text:String = ""){
+          DispatchQueue.main.async {
+              FTIndicator.showToastMessage(text)
+          }
+          
+      }
+      public  static func showError(text:String = ""){
+          DispatchQueue.main.async {
+//              FTIndicator.showError(withMessage:text)
+              TSMessage.showNotification(in: UIApplication.topViewController(), title: text, subtitle: "", type: .error)
+          }
+          
+      }
 }
-extension UITextField {
-    func addDoneCancelToolbar(onDone: (target: Any, action: Selector)? = nil, onCancel: (target: Any, action: Selector)? = nil) {
-        let onCancel = onCancel ?? (target: self, action: #selector(cancelButtonTapped))
-        let onDone = onDone ?? (target: self, action: #selector(doneButtonTapped))
-        
-        let toolbar: UIToolbar = UIToolbar()
-        toolbar.barStyle = .default
-        let doneBtn = UIBarButtonItem(title: "Done", style: .plain, target: onDone.target, action: onDone.action)
-        doneBtn.tag = self.tag
-        let cancelBtn = UIBarButtonItem(title: "Cancel", style: .plain, target: onCancel.target, action:onCancel.action)
-        cancelBtn.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.navColor()], for: .normal)
-        doneBtn.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.navColor()], for: .normal)
-        
-        toolbar.items = [
-            cancelBtn,
-            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
-            doneBtn
-        ]
-        toolbar.sizeToFit()
-        
-        self.inputAccessoryView = toolbar
+
+class VerticalStackView: UIStackView {
+
+    init(arrangedSubviews: [UIView], spacing: CGFloat = 0) {
+        super.init(frame: .zero)
+        arrangedSubviews.forEach{addArrangedSubview($0)}
+        self.spacing = spacing
+        self.axis = .vertical
     }
-    func addDoneToolbar(onDone: (target: Any, action: Selector)? = nil) {
-        let onDone = onDone ?? (target: self, action: #selector(doneButtonTapped))
-        
-        let toolbar: UIToolbar = UIToolbar()
-        toolbar.barStyle = .default
-        let doneBtn = UIBarButtonItem(title: "Done", style: .plain, target: onDone.target, action: onDone.action)
-        doneBtn.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.navColor()], for: .normal)
-        
-        toolbar.items = [
-            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
-            doneBtn
-        ]
-        toolbar.sizeToFit()
-        
-        self.inputAccessoryView = toolbar
+    func addBackground(color: UIColor, radius: CGFloat) {
+        let subView = UIView(frame: bounds)
+        subView.backgroundColor = color
+        subView.layer.cornerRadius = radius
+        subView.clipsToBounds = true
+        subView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        insertSubview(subView, at: 0)
     }
-    // Default actions:
-    @objc func doneButtonTapped() { self.resignFirstResponder() }
-    @objc func cancelButtonTapped() { self.resignFirstResponder() }
+    
+    
+    required init(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
 }
