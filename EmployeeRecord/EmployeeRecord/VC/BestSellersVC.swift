@@ -10,8 +10,8 @@ import ObjectMapper
 
 class BestSellersVC: BaseVC {
 
-    var data:[BestSellerList] = []
-    var searchData:[BestSellerList] = []
+    var data:[BestSeller] = []
+    var searchData:[BestSeller] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +25,13 @@ class BestSellersVC: BaseVC {
         self.setupSearchControlller()
         self.tableView.tableHeaderView = searchController.searchBar
 
-        let dataLocal = AppManager.shared.getJsonArrayData(pathName: "bestSellers")
-        if dataLocal.count > 0 {
-            self.data = Mapper<BestSellerList>().mapArray(JSONArray: dataLocal)
+        //when get data from Realm, no key to sort same as data from server
+//        self.data = DataManager.shared.getAllBestSellers()
+        
+        //So we get data we save in FileManager
+        let localData = AppManager.shared.getJsonArrayData(pathName: DataKey.bestSellers.rawValue)
+        if localData.count > 0 {
+            self.data = Mapper<BestSeller>().mapArray(JSONArray: localData)
             self.tableView.reloadData()
         }
         
@@ -96,6 +100,17 @@ class BestSellersVC: BaseVC {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        var list = self.data[indexPath.row]
+        if self.searchText.count > 0 {
+            list = self.searchData[indexPath.row]
+        }
+        
+        let detailVC = BooksVC()
+        detailVC.list_name_encoded = list.list_name_encoded ?? ""
+        detailVC.list_name = list.list_name
+        self.navigationController?.pushViewController(detailVC, animated: false)
+    }
 
     
 }

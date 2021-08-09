@@ -28,7 +28,7 @@ class NewEmployeeVC: BaseVC {
 
     let dateFormater = DateFormatter.getDateFormatterWith(format:"dd MMMM yyyy")
     var allowEditing = true
-    var actionButton : UIButton!
+    var deletedButton : UIButton!
 
     
     // MARK: - Main functions
@@ -54,9 +54,24 @@ class NewEmployeeVC: BaseVC {
             allowEditing = false
             self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.refreshToEdit))
 
+        }else{
+            self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(actionButtonClicked(sender:)))
+
         }
         self.setupView()
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshFavoriteBook), name: Notification.Name("RefreshBookSelected"), object: nil)
 
+
+    }
+    @objc func refreshFavoriteBook(){
+        if let selectedBook = DataManager.shared.selectedBook  {
+            //update employee book
+            self.employee?.book = selectedBook.title
+            self.allTextFields[titles.count - 1].text = selectedBook.title
+        }
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        DataManager.shared.selectedBook = nil
     }
     @objc func refreshToEdit(){
         allowEditing = true
@@ -68,8 +83,11 @@ class NewEmployeeVC: BaseVC {
         textViewAddress.isEditable = true
         allTextFields[0].becomeFirstResponder()
 
-        actionButton.setButtonWith(backgroundColor: UIColor.defaultBlueColor(), textColor:.white , text: "Update", fontSize: 18, isRound: true)
-        self.navigationItem.rightBarButtonItem = nil
+//        actionButton.setButtonWith(backgroundColor: UIColor.defaultBlueColor(), textColor:.white , text: "Update", fontSize: 18, isRound: true)
+//        self.navigationItem.rightBarButtonItem = nil
+        self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(actionButtonClicked(sender:)))
+        self.deletedButton.isHidden = false
+
     }
     
     func setupView(){
@@ -139,20 +157,22 @@ class NewEmployeeVC: BaseVC {
         yView += 30
 
         
-        actionButton = UIButton(frame: CGRect(x: 20, y: yView, width: screenBound.width - 40, height: 50))
-        actionButton.setButtonWith(backgroundColor: UIColor.systemBlue, textColor:.white , text: self.employee == nil ? "Save" : "Update", fontSize: 18, isRound: true)
-        actionButton.addTarget(self, action: #selector(self.actionButtonClicked(sender:)), for: .touchUpInside)
+        
 
-        if self.allowEditing == false {
-            //show delete button when view detail
-            actionButton.setButtonWith(backgroundColor: UIColor.red, textColor:.white , text: "Delete", fontSize: 18, isRound: true)
+        if self.employee != nil && self.allowEditing == false {
+            deletedButton = UIButton(frame: CGRect(x: 20, y: yView, width: screenBound.width - 40, height: 50))
+            deletedButton.addTarget(self, action: #selector(self.deleteClicked(sender:)), for: .touchUpInside)
+            scrollView.addSubview(deletedButton)
+            //show delete button
+            deletedButton.setButtonWith(backgroundColor: UIColor.red, textColor:.white , text: "Delete", fontSize: 18, isRound: true)
+            deletedButton.isHidden = true
+
         }
-        scrollView.addSubview(actionButton)
+        
         yView += 80
         screenHeight = yView
 
         self.scrollView.contentSize = CGSize(width: scrollView.frame.width, height: yView)
-//        allTextFields[0].becomeFirstResponder()
         
         if self.employee != nil{
             //show employee detail info
@@ -259,15 +279,20 @@ class NewEmployeeVC: BaseVC {
     }
     override func viewWillDisappear(_ animated: Bool) {
         self.hideAllKeyboards()
+        self.scrollView.contentSize = CGSize(width: scrollView.frame.width, height: screenHeight )
+
     }
     @objc func hideAllKeyboards(){
-        self.view.endEditing(false)
+        self.view.endEditing(true)
         allTextFields.forEach { tf in
             tf.resignFirstResponder()
         }
+        textViewAddress.resignFirstResponder()
+        textViewHobby.resignFirstResponder()
     }
 
     @objc func deleteClicked(sender:UIButton){
+        self.hideAllKeyboards()
         self.showAlertMessage(title: nil, message: "Delete this employee ?", actionTitle: "Delete") {
             //delete local data
             DataManager.shared.removeEmployee(employee: self.employee!)
@@ -428,7 +453,7 @@ extension NewEmployeeVC: UIImagePickerControllerDelegate, UINavigationController
    
 extension NewEmployeeVC:UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        if textField.tag == 5 {
+        if textField.tag == 5 ||  textField.tag == allTextFields[titles.count - 1].tag {
             self.hideAllKeyboards()
             textFieldDidBeginEditing(textField)
         }
@@ -447,6 +472,9 @@ extension NewEmployeeVC:UITextFieldDelegate {
         if textField.tag == allTextFields[titles.count - 1].tag { //go to book lists screen
             self.hideAllKeyboards()
             
+            if self.employee != nil{
+                DataManager.shared.selectedBook = DataManager.shared.getBookFor(title: self.employee?.book ?? "")
+            }
             let nav = UINavigationController(rootViewController: BestSellersVC())
             self.present(nav, animated: false, completion: nil)
             return

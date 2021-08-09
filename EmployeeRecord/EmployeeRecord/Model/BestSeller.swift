@@ -8,7 +8,7 @@
 import UIKit
 import ObjectMapper
 
-class BestSellerList: Mappable {
+class BestSeller: Mappable {
 
 //                "list_name": "Combined Print and E-Book Fiction",
 //                "display_name": "Combined Print & E-Book Fiction",

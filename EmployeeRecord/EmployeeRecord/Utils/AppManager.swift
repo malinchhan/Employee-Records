@@ -7,6 +7,14 @@
 
 import UIKit
 
+public enum DataKey: String{
+    case employeeProfile = "employeeProfile"
+    case bestSellers = "bestSellers"
+    case bestSellersBooks = "bestSellersBooks"
+    case top5BooksFromBestSellers = "top5BooksFromBestSellers"
+
+}
+
 class AppManager: NSObject {
     static let shared = AppManager()
 

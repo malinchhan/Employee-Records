@@ -21,6 +21,8 @@ class Book: Mappable {
     var updated_date:String?
     var weeks_on_list:Int?
     var publisher:String?
+    var list_name:String = ""
+    var list_name_encoded:String = ""
     
     required init?(map: Map) {
     }
@@ -37,6 +39,8 @@ class Book: Mappable {
         updated_date <- map["updated_date"]
         weeks_on_list <- map["weeks_on_list"]
         publisher <- map["publisher"]
+        list_name <- map["list_name"]
+        list_name_encoded <- map["list_name_encoded"]
 
     }
     

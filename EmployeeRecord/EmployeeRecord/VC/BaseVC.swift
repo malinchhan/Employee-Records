@@ -47,7 +47,10 @@ class BaseVC: UIViewController {
             }
             text = text.replacingOccurrences(of: "*", with: "")
             Util.showError(text:text + " is required !")
-            textField.becomeFirstResponder()
+            if text != "Favorite book" && text != "Province / City"{
+                textField.becomeFirstResponder()
+
+            }
             return false
         }
         return true
@@ -83,8 +86,8 @@ class BaseVC: UIViewController {
         UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = UIColor.gray
 
         //update cancel color
-        let cancelButtonAttributes = [NSAttributedString.Key.foregroundColor: UIColor.defaultBlueColor()]
-        UIBarButtonItem.appearance().setTitleTextAttributes(cancelButtonAttributes , for: .normal)
+//        let cancelButtonAttributes = [NSAttributedString.Key.foregroundColor: UIColor.gray]
+//        UIBarButtonItem.appearance().setTitleTextAttributes(cancelButtonAttributes , for: .normal)
         
     }
 }
