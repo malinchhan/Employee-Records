@@ -56,7 +56,9 @@ class NewEmployeeVC: BaseVC {
             self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.refreshToEdit))
 
         }else{
-            self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(actionButtonClicked(sender:)))
+            self.navigationItem.leftBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissScreen))
+            
+            self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(actionButtonClicked(sender:)))
 
         }
         self.setupView()
@@ -186,8 +188,10 @@ class NewEmployeeVC: BaseVC {
         
         if self.employee != nil{
             //show employee detail info
-            
-            if let dataProfile = AppManager.shared.getMediaData(pathName: "image" + "\(employee?.id ?? 0)"){
+            if (self.employee?.imageData.count)! > 0 {
+                imageView.image = UIImage(data: self.employee!.imageData)
+                imageData = self.employee?.imageData
+            }else if let dataProfile = AppManager.shared.getMediaData(pathName: DataKey.employeeProfile.rawValue + "\(employee?.id ?? 0)"){
                 employee?.imageData = dataProfile
                 imageView.image = UIImage(data: dataProfile)
                 imageData = dataProfile
@@ -306,7 +310,8 @@ class NewEmployeeVC: BaseVC {
         self.showAlertMessage(title: nil, message: "Delete this employee ?", actionTitle: "Delete") {
             //delete local data
             DataManager.shared.removeEmployee(employee: self.employee!)
-            self.navigationController?.popViewController(animated: false)
+            self.onDataUpdatedOrCreated!()
+            self.popBack()
         }
     }
     @objc func actionButtonClicked(sender:UIButton){
@@ -367,7 +372,7 @@ class NewEmployeeVC: BaseVC {
                 let imageFileName =  DataKey.employeeProfile.rawValue
                 if employee == nil { //new employee
                     let count = DataManager.shared.countEmployees()
-                    currentEmployee.id = count
+                    currentEmployee.id = count + 1
                     AppManager.shared.saveMediaData(pathName: imageFileName + "\(count)", data: data)
 
                 }else{
@@ -382,15 +387,16 @@ class NewEmployeeVC: BaseVC {
             }
             
             DataManager.shared.addEmployee(employee: currentEmployee)
+            self.onDataUpdatedOrCreated!()
+
             if employee == nil {
-                self.navigationController?.popViewController(animated: false)
+                self.dismissScreen()
             }else{
 //                Util.showToast(text: "Employee information updated !")
                 self.allowEditing = false
                 self.refreshToEditOrView()
                 
             }
-            self.onDataUpdatedOrCreated!()
         }
                 
     }

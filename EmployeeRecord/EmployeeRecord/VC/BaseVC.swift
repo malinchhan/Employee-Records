@@ -65,14 +65,14 @@ class BaseVC: UIViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
-        searchController.searchBar.searchBarStyle = .prominent
+        searchController.searchBar.searchBarStyle = .default
         
 
         //update textfield font
         let textFieldInSearchBar = self.searchController.searchBar.value(forKey: "searchField") as? UITextField
         textFieldInSearchBar?.font = UIFont.systemFont(ofSize: 18)
         textFieldInSearchBar?.textColor = UIColor.black
-        textFieldInSearchBar?.backgroundColor = .white
+        textFieldInSearchBar?.backgroundColor = .lightGrayColor()
         let placeHolder = textFieldInSearchBar?.value(forKey: "placeholderLabel") as? UILabel
         placeHolder?.font  = UIFont.systemFont(ofSize: 15)
         placeHolder?.textColor = UIColor.defaultBlueColor().withAlphaComponent(0.8)
@@ -84,10 +84,6 @@ class BaseVC: UIViewController {
 //        //update cursor color
         searchController.searchBar.tintColor = UIColor.gray
         UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = UIColor.gray
-
-        //update cancel color
-//        let cancelButtonAttributes = [NSAttributedString.Key.foregroundColor: UIColor.gray]
-//        UIBarButtonItem.appearance().setTitleTextAttributes(cancelButtonAttributes , for: .normal)
         
     }
     @objc func dismissScreen(){

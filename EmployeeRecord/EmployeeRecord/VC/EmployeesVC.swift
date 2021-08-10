@@ -54,7 +54,9 @@ class EmployeesVC: BaseVC {
         vc.onDataUpdatedOrCreated = {
             self.refreshDataFromLocalDB()
         }
-        self.navigationController?.pushViewController(vc, animated: false)
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .fullScreen
+        self.present(nav, animated: false, completion: nil)
     }
     
 
