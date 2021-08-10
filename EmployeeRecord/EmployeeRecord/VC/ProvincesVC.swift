@@ -61,9 +61,9 @@ class ProvincesVC: BaseVC {
     }
     // MARK: - Table view data source
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
-    }
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 60
+//    }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier:cellID , for: indexPath)  as! DefaultTableViewCell
@@ -73,7 +73,7 @@ class ProvincesVC: BaseVC {
         }
 
         cell.textLabel?.text = province
-        cell.textLabel?.font = .systemFont(ofSize: 14)
+//        cell.textLabel?.font = .systemFont(ofSize: 14)
         cell.textLabel?.textColor = .black
 
         cell.accessoryType = .none

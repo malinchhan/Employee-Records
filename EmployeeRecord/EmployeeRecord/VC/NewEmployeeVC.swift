@@ -75,21 +75,30 @@ class NewEmployeeVC: BaseVC {
     }
     @objc func refreshToEdit(){
         allowEditing = true
-        imageView.isUserInteractionEnabled = true
-        allTextFields.forEach { tf in
-            tf.isUserInteractionEnabled = true
-        }
-        textViewHobby.isEditable = true
-        textViewAddress.isEditable = true
-        allTextFields[0].becomeFirstResponder()
-
-//        actionButton.setButtonWith(backgroundColor: UIColor.defaultBlueColor(), textColor:.white , text: "Update", fontSize: 18, isRound: true)
-//        self.navigationItem.rightBarButtonItem = nil
-        self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(actionButtonClicked(sender:)))
-        self.deletedButton.isHidden = false
+        self.refreshToEditOrView()
 
     }
-    
+    @objc func refreshToEditOrView(){
+        
+        imageView.isUserInteractionEnabled = allowEditing
+        allTextFields.forEach { tf in
+            tf.isUserInteractionEnabled = allowEditing
+        }
+        textViewHobby.isEditable = allowEditing
+        textViewAddress.isEditable = allowEditing
+        if allowEditing == true {
+            allTextFields[0].becomeFirstResponder()
+            self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: allowEditing == true ? .save : .edit, target: self, action: #selector(actionButtonClicked(sender:)))
+
+        }else{
+            self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.refreshToEdit))
+
+        }
+
+        self.deletedButton.isHidden = !allowEditing
+
+    }
+   
     func setupView(){
         var yView:CGFloat = 20
 
@@ -375,7 +384,10 @@ class NewEmployeeVC: BaseVC {
             if employee == nil {
                 self.navigationController?.popViewController(animated: false)
             }else{
-                Util.showToast(text: "Employee information updated !")
+//                Util.showToast(text: "Employee information updated !")
+                self.allowEditing = false
+                self.refreshToEditOrView()
+                
             }
         }
                 
