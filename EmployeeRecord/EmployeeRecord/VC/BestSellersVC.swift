@@ -20,7 +20,7 @@ class BestSellersVC: BaseVC {
         self.tableView.register(DefaultTableViewCell.self, forCellReuseIdentifier: cellID)
         self.title = "Best Sellers"
 
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(goBack))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(dismissScreen))
         
         self.setupSearchControlller()
         self.tableView.tableHeaderView = searchController.searchBar
@@ -37,21 +37,23 @@ class BestSellersVC: BaseVC {
         
         self.requestData()
     }
-    
-    @objc func goBack(){
-        self.dismiss(animated: false, completion: nil)
-    }
+   
     func requestData(){
         Util.showIndicator()
-        APIService.shared.getBestSellersList { results, error in
-            Util.hideIndicator()
-            
-            if results != nil {
-                self.data = results!
-                self.tableView.reloadData()
-                return
+        DispatchQueue.global(qos: .background).async {
+
+            APIService.shared.getBestSellersList { results, error in
+                
+                DispatchQueue.main.async {
+                    Util.hideIndicator()
+                    if results != nil {
+                        self.data = results!
+                        self.tableView.reloadData()
+                        return
+                    }
+                    Util.showError(text: error ?? "Unkwon Error !")
+                }
             }
-            Util.showError(text: error ?? "Unkwon Error !")
         }
     }
     override func updateSearchResults(for searchController: UISearchController) {
@@ -74,9 +76,7 @@ class BestSellersVC: BaseVC {
     }
 
     // MARK: - Table view data source
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
+    
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.searchText.count > 0 {

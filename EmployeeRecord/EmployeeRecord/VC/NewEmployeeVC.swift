@@ -64,14 +64,14 @@ class NewEmployeeVC: BaseVC {
 
     }
     @objc func refreshFavoriteBook(){
-        if let selectedBook = DataManager.shared.selectedBook  {
+        if let selectedBook = AppManager.shared.selectedBook  {
             //update employee book
             self.employee?.book = selectedBook.title
             self.allTextFields[titles.count - 1].text = selectedBook.title
         }
     }
     override func viewDidDisappear(_ animated: Bool) {
-        DataManager.shared.selectedBook = nil
+        AppManager.shared.selectedBook = nil
     }
     @objc func refreshToEdit(){
         allowEditing = true
@@ -319,10 +319,6 @@ class NewEmployeeVC: BaseVC {
              
              */
         
-        if self.allowEditing == false && self.employee != nil {
-            self.deleteClicked(sender: sender)
-            return
-        }
         if imageData == nil {
             Util.showError(text: "Profile image is required !")
             return
@@ -358,7 +354,7 @@ class NewEmployeeVC: BaseVC {
             self.hideAllKeyboards()
             
             if let data = imageView.image?.jpegData(compressionQuality: 0.5) {
-                let imageFileName =  "image"
+                let imageFileName =  DataKey.employeeProfile.rawValue
                 if employee == nil { //new employee
                     let count = DataManager.shared.countEmployees()
                     currentEmployee.id = count
@@ -453,13 +449,24 @@ extension NewEmployeeVC: UIImagePickerControllerDelegate, UINavigationController
    
 extension NewEmployeeVC:UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        if textField.tag == 5 ||  textField.tag == allTextFields[titles.count - 1].tag {
+        if textField.tag == 5 ||  textField.tag == allTextFields[titles.count - 1].tag || textField.tag == 3 {
             self.hideAllKeyboards()
             textFieldDidBeginEditing(textField)
         }
         return true
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField.tag == 3 { //show provinces/city list
+            self.hideAllKeyboards()
+
+            let provincesVC =  ProvincesVC()
+            provincesVC.onProvinceSelected = { provinceSelected  in
+                self.allTextFields[3].text = provinceSelected
+            }
+            let nav = UINavigationController(rootViewController: provincesVC)
+            self.present(nav, animated: false, completion: nil)
+            
+        }
         if textField.tag == 5 || textField.tag == 6 {
             if textField.tag == 5 {
                 self.hideAllKeyboards()
@@ -473,7 +480,7 @@ extension NewEmployeeVC:UITextFieldDelegate {
             self.hideAllKeyboards()
             
             if self.employee != nil{
-                DataManager.shared.selectedBook = DataManager.shared.getBookFor(title: self.employee?.book ?? "")
+                AppManager.shared.selectedBook = DataManager.shared.getBookFor(title: self.employee?.book ?? "")
             }
             let nav = UINavigationController(rootViewController: BestSellersVC())
             self.present(nav, animated: false, completion: nil)

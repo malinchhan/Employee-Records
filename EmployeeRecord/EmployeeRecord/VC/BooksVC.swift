@@ -40,23 +40,25 @@ class BooksVC: BaseVC {
         super.dismiss(animated: false, completion: nil)
     }
     
-    @objc func goBack(){
-        self.navigationController?.popViewController(animated: false)
-    }
+  
     func requestData(){
         if let listName = self.list_name_encoded {
         
             print("list name: \(listName)")
             Util.showIndicator()
-            APIService.shared.getDetailBestSellers(list_name_encoded: listName) { results, error in
-                Util.hideIndicator()
+            DispatchQueue.global(qos: .background).async {
+                APIService.shared.getDetailBestSellers(list_name_encoded: listName) { results, error in
+                    DispatchQueue.main.async {
+                        Util.hideIndicator()
 
-                if results != nil {
-                    self.data = results!
-                    self.tableView.reloadData()
-                    return
+                        if results != nil {
+                            self.data = results!
+                            self.tableView.reloadData()
+                            return
+                        }
+                        Util.showError(text: error ?? "Unkwon Error !")
+                    }
                 }
-                Util.showError(text: error ?? "Unkwon Error !")
             }
         }
     }
@@ -80,9 +82,6 @@ class BooksVC: BaseVC {
     }
 
     // MARK: - Table view data source
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.searchText.count > 0 {
@@ -111,7 +110,7 @@ class BooksVC: BaseVC {
         cell.detailTextLabel?.font = .systemFont(ofSize: 15)
 
         cell.accessoryType = .none
-        if let selectedBook = DataManager.shared.selectedBook {
+        if let selectedBook = AppManager.shared.selectedBook {
             if selectedBook.title == book.title {
                 cell.accessoryType = .checkmark
             }
@@ -124,7 +123,7 @@ class BooksVC: BaseVC {
         if self.searchText.count > 0 {
             book = self.searchData[indexPath.row]
         }
-        DataManager.shared.selectedBook = book
+        AppManager.shared.selectedBook = book
         self.tableView.reloadData()
     }
     

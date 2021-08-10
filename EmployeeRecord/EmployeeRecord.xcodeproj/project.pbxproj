@@ -36,6 +36,7 @@
 		A8D90BE926BFE48400D52138 /* BestSeller.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D90BE826BFE48400D52138 /* BestSeller.swift */; };
 		A8D90BEB26BFE9DA00D52138 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D90BEA26BFE9DA00D52138 /* Book.swift */; };
 		A8D90BED26BFF27300D52138 /* BestSellersVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D90BEC26BFF27300D52138 /* BestSellersVC.swift */; };
+		A8F8804826C20837003672C4 /* ProvincesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F8804726C20837003672C4 /* ProvincesVC.swift */; };
 		CCFBF03D6863B650C467C943 /* Pods_EmployeeRecord_EmployeeRecordUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABC88938B473B8CF0BDD1720 /* Pods_EmployeeRecord_EmployeeRecordUITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -96,6 +97,7 @@
 		A8D90BE826BFE48400D52138 /* BestSeller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestSeller.swift; sourceTree = "<group>"; };
 		A8D90BEA26BFE9DA00D52138 /* Book.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 		A8D90BEC26BFF27300D52138 /* BestSellersVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestSellersVC.swift; sourceTree = "<group>"; };
+		A8F8804726C20837003672C4 /* ProvincesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvincesVC.swift; sourceTree = "<group>"; };
 		ABC88938B473B8CF0BDD1720 /* Pods_EmployeeRecord_EmployeeRecordUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EmployeeRecord_EmployeeRecordUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4EEC5609DA3B6827C9CE427 /* Pods_EmployeeRecord.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EmployeeRecord.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E820F46AFF8B51A8676223B4 /* Pods-EmployeeRecord-EmployeeRecordUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EmployeeRecord-EmployeeRecordUITests.release.xcconfig"; path = "Target Support Files/Pods-EmployeeRecord-EmployeeRecordUITests/Pods-EmployeeRecord-EmployeeRecordUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				A80995FE26BE807C0071A183 /* BaseVC.swift */,
 				A8D90BEC26BFF27300D52138 /* BestSellersVC.swift */,
 				A8A0D3C526C12B820025D233 /* BooksVC.swift */,
+				A8F8804726C20837003672C4 /* ProvincesVC.swift */,
 			);
 			path = VC;
 			sourceTree = "<group>";
@@ -524,6 +527,7 @@
 				A80DF02726C18096000064A1 /* BestSellerItem.swift in Sources */,
 				A80995FD26BE7FF20071A183 /* NewEmployeeVC.swift in Sources */,
 				A8D90BE926BFE48400D52138 /* BestSeller.swift in Sources */,
+				A8F8804826C20837003672C4 /* ProvincesVC.swift in Sources */,
 				A8D90BED26BFF27300D52138 /* BestSellersVC.swift in Sources */,
 				A8D90BEB26BFE9DA00D52138 /* Book.swift in Sources */,
 				A856641826BE6B95000FE02F /* AppDelegate.swift in Sources */,

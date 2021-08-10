@@ -21,14 +21,14 @@ class EmployeeCell: DefaultTableViewCell {
             let middleName = ((employee?.middleName.count)! > 0) ? (employee!.middleName + " ") : ""
             self.nameLbl.text = (employee?.firstName)! + " " +  middleName + employee!.lastName
             
-//            if employee!.imageData.count > 0 {
-//                profileImageView.image = UIImage(data: employee!.imageData)
-//            }else{
+            if employee!.imageData.count > 0 {
+                profileImageView.image = UIImage(data: employee!.imageData)
+            }else{
                 if let dataProfile = AppManager.shared.getMediaData(pathName: "image" + "\(employee?.id ?? 0)"){
                     employee?.imageData = dataProfile
                     profileImageView.image = UIImage(data: dataProfile)
                 }
-//            }
+            }
             genderLbl.text = employee?.gender
             
             let date = Util.shared.getDateFromString(dateStr: employee?.updated_at ?? "")

@@ -40,6 +40,7 @@ class EmployeesVC: BaseVC {
     func refreshDataFromLocalDB (){
         //get data from local db
         self.data = DataManager.shared.getAllEmployees()
+    
         self.tableView.reloadData()
         if data.count == 0 {
             self.tableView.backgroundView = UILabel(text: "No Employee", font: .systemFont(ofSize: 16), color: .black, textAlignment: .center, numberOfLines: 1)

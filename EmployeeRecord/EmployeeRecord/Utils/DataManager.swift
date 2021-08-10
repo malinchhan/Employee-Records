@@ -13,7 +13,6 @@ import ObjectMapper
 class DataManager: NSObject {
     static let shared = DataManager()
     
-    var selectedBook:Book?
     
     func addEmployee(employee:Employee){
         do {
@@ -49,6 +48,11 @@ class DataManager: NSObject {
             for item in items {
                 let json = item.jsonString
                 let object = Mapper<Employee>().map(JSONString:json )
+                
+                //check profile image of each employee
+                if let dataProfile = AppManager.shared.getMediaData(pathName: DataKey.employeeProfile.rawValue + "\(object?.id ?? 0)"){
+                    object?.imageData = dataProfile
+                }
                 array.append(object!)
             }
         

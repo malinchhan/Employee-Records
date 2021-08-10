@@ -17,6 +17,38 @@ public enum DataKey: String{
 
 class AppManager: NSObject {
     static let shared = AppManager()
+    var selectedBook:Book?
+    let provincesAndCity:[String] = [
+            "Phnom Penh",
+            "Takeo",
+            "Sihanoukville",
+            "Battambang",
+            "Siem Reap",
+            "Paoy Paet",
+            "Kampong Chhnang",
+            "Kampong Cham",
+            "Pursat",
+            "Ta Khmau",
+            "Phumi Veal Sre",
+            "Kampong Speu",
+            "Koh Kong",
+            "Prey Veng",
+            "Suong",
+            "Smach Mean Chey",
+            "Stung Treng",
+            "Tbeng Meanchey",
+            "Svay Rieng",
+            "Sisophon",
+            "Kampot",
+            "Kratie",
+            "Kampong Thom",
+            "Lumphat",
+            "Samraong",
+            "Pailin",
+            "Banlung",
+            "Krong Kep",
+            "Sen Monorom"
+]
 
     func getDocumentsDirectory() -> URL {
         

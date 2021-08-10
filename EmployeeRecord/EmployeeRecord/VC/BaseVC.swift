@@ -90,7 +90,14 @@ class BaseVC: UIViewController {
 //        UIBarButtonItem.appearance().setTitleTextAttributes(cancelButtonAttributes , for: .normal)
         
     }
+    @objc func dismissScreen(){
+        self.dismiss(animated: false, completion: nil)
+    }
+    @objc func popBack(){
+        self.navigationController?.popViewController(animated: false)
+    }
 }
+
 // MARK: - Table view data source
 extension BaseVC:UITableViewDelegate,UITableViewDataSource{
 
