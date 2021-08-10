@@ -50,12 +50,13 @@ class EmployeesVC: BaseVC {
         }
     }
     @objc func addNewEmployee(){
-        self.navigationController?.pushViewController(NewEmployeeVC(), animated: false)
+        let vc  = NewEmployeeVC()
+        vc.onDataUpdatedOrCreated = {
+            self.refreshDataFromLocalDB()
+        }
+        self.navigationController?.pushViewController(vc, animated: false)
     }
-    override func viewDidAppear(_ animated: Bool) {
-        self.refreshDataFromLocalDB()
-
-    }
+    
 
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -76,6 +77,9 @@ class EmployeesVC: BaseVC {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = NewEmployeeVC()
+        detailVC.onDataUpdatedOrCreated = {
+            self.refreshDataFromLocalDB()
+        }
         detailVC.employee = self.data[indexPath.row]
         self.navigationController?.pushViewController(detailVC, animated: false)
     }

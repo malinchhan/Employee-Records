@@ -11,7 +11,7 @@ class ProvincesVC: BaseVC {
 
     public var onProvinceSelected:((String)->Void)?
     var provinceSelected:String = ""
-    var data:[String] = AppManager.shared.provincesAndCity
+    var data:[String] = AppManager.shared.provincesAndCity.sorted()
     var searchData:[String] = []
     
     override func viewDidLoad() {

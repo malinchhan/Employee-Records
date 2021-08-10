@@ -29,6 +29,7 @@ class NewEmployeeVC: BaseVC {
     let dateFormater = DateFormatter.getDateFormatterWith(format:"dd MMMM yyyy")
     var allowEditing = true
     var deletedButton : UIButton!
+    public var onDataUpdatedOrCreated:(()->Void)?
 
     
     // MARK: - Main functions
@@ -357,7 +358,7 @@ class NewEmployeeVC: BaseVC {
             jsonData["dob"] = newDateFormatter.string(from: datePickerDOB.date)
         }
         
-        print("json data: \(jsonData)")
+//        print("json data: \(jsonData)")
 
         if let currentEmployee = Mapper<Employee>().map(JSON:jsonData) {
             self.hideAllKeyboards()
@@ -389,6 +390,7 @@ class NewEmployeeVC: BaseVC {
                 self.refreshToEditOrView()
                 
             }
+            self.onDataUpdatedOrCreated!()
         }
                 
     }

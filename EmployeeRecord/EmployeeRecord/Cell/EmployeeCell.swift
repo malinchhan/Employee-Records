@@ -40,22 +40,20 @@ class EmployeeCell: DefaultTableViewCell {
         self.textLabel?.textColor = UIColor.black
         backgroundColor = .white
         self.profileImageView.frame = CGRect(x: 20, y: 10, width: 80, height: 80)
-        self.addSubview(profileImageView)
+        self.nameLbl.frame = CGRect(x: 115, y: 15, width: screenBound.width - 135, height: 20)
+        self.genderLbl.frame = CGRect(x: 115, y: 40, width: screenBound.width - 135, height: 20)
+        self.dateLbl.frame = CGRect(x: 115, y: 65, width: screenBound.width - 135, height: 20)
         
-        self.nameLbl.frame = CGRect(x: 110, y: 10, width: screenBound.width - 120, height: 25)
+        self.addSubview(profileImageView)
         self.addSubview(nameLbl)
-
-        self.genderLbl.frame = CGRect(x: 110, y: 35, width: screenBound.width - 120, height: 25)
         self.addSubview(genderLbl)
-
-        self.dateLbl.frame = CGRect(x: 110, y: 60, width: screenBound.width - 120, height: 30)
         self.addSubview(dateLbl)
         
 //        profileImageView.constrainWidth(80)
 //        profileImageView.constrainHeight(80)
         profileImageView.contentMode = .scaleAspectFill
-
         nameLbl.textColor =  UIColor.black
+        genderLbl.textColor = .darkGray
         dateLbl.textColor = .darkGray
 //        dateLbl.constrainHeight(20)
         dateLbl.textAlignment = .right
