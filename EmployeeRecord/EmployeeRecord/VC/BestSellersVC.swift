@@ -25,6 +25,13 @@ class BestSellersVC: BaseVC {
         self.setupSearchControlller()
         self.tableView.tableHeaderView = searchController.searchBar
 
+        let buttonRight = UIButton(frame: CGRect(x: 0, y: 0, width: 100 , height: 50))
+        buttonRight.setTitle("Top 5 Books", for: .normal)
+        buttonRight.setTitleColor(.defaultBlueColor(), for: .normal)
+        
+        buttonRight.addTarget(self, action: #selector(top5BooksClicked), for: .touchUpInside)
+        self.navigationItem.rightBarButtonItem =  UIBarButtonItem(customView: buttonRight)
+        
         //when get data from Realm, no key to sort same as data from server
 //        self.data = DataManager.shared.getAllBestSellers()
         
@@ -36,6 +43,15 @@ class BestSellersVC: BaseVC {
         }
         
         self.requestData()
+    }
+   
+    @objc func top5BooksClicked(){
+        if self.searchController != nil {
+            self.searchController.isActive = false //avoid crash when search is active
+        }
+        let vc = Top5BooksVC()
+        self.navigationController?.pushViewController(vc, animated: false)
+        
     }
    
     func requestData(){
@@ -73,12 +89,17 @@ class BestSellersVC: BaseVC {
             self.searchText = ""
         }
         
-        self.tableView.reloadData()
-
+        var noSearchData = false
+        if self.searchText.count > 0 && self.searchData.count == 0 {
+            noSearchData = true
+        }
+        self.refreshScreen(isNoData: noSearchData)
     }
 
     // MARK: - Table view data source
-    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
+    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.searchText.count > 0 {
@@ -91,6 +112,9 @@ class BestSellersVC: BaseVC {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier:cellID , for: indexPath)  as! DefaultTableViewCell
         if self.searchText.count > 0 {
+            if self.searchData.count == 0 {
+                return DefaultTableViewCell()
+            }
             cell.textLabel?.text = self.searchData[indexPath.row].display_name
 
         }else{

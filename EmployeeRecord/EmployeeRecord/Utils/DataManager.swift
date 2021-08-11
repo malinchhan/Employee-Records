@@ -132,7 +132,7 @@ class DataManager: NSObject {
             let realm = try Realm()
             let item = BookItem()
             let jsonData = book.toJSON()
-            print("book json: \(jsonData)")
+//            print("book json: \(jsonData)")
             jsonData.forEach { (key, value) in
                 if key == "title" || key == "author" || key == "display_name" || key == "list_name_encoded"  {
                     item.setValue(value, forKey: key)

@@ -17,16 +17,9 @@ class BooksVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.addTableView(frame: self.screenBound, style: .plain)
-        self.tableView.register(DefaultTableViewCell.self, forCellReuseIdentifier: cellID)
-        self.title = "Select favorite book"
+        self.title = list_name ?? "List detail"
 
-        self.setupSearchControlller()
-        self.tableView.tableHeaderView = searchController.searchBar
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneClicked))
-
+        self.addTableViewAndSearchBar()
         if self.list_name != nil {
             self.data = DataManager.shared.getAllBooksFor(list_name: self.list_name!)
             if self.data.count > 0 {
@@ -34,12 +27,6 @@ class BooksVC: BaseVC {
             }
         }
         self.requestData()
-    }
-    @objc func doneClicked(){
-        self.searchController.isActive = false //avoid crash when search is active
-
-        NotificationCenter.default.post(name: Notification.Name("RefreshBookSelected"), object: nil)
-        super.dismiss(animated: false, completion: nil)
     }
     
   
@@ -81,10 +68,13 @@ class BooksVC: BaseVC {
             self.searchText = ""
         }
         
-        self.tableView.reloadData()
-
+        var noSearchData = false
+        if self.searchText.count > 0 && self.searchData.count == 0 {
+            noSearchData = true
+        }
+        self.refreshScreen(isNoData: noSearchData)
     }
-
+    
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -95,9 +85,8 @@ class BooksVC: BaseVC {
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return 70
     }
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = DefaultTableViewCell(style: .subtitle, reuseIdentifier:cellID)
         var book:Book = self.data[indexPath.row]
@@ -108,11 +97,13 @@ class BooksVC: BaseVC {
         cell.textLabel?.text = book.title
         cell.textLabel?.font = .systemFont(ofSize: 14)
         cell.textLabel?.textColor = .black
+        cell.textLabel?.numberOfLines = 2
 
         cell.detailTextLabel?.text = "Author: \(book.author ?? "")"
         cell.detailTextLabel?.textColor = .lightGray
         cell.detailTextLabel?.font = .systemFont(ofSize: 15)
-
+        cell.detailTextLabel?.numberOfLines = 2
+        
         cell.accessoryType = .none
         if let selectedBook = AppManager.shared.selectedBook {
             if selectedBook.title == book.title {

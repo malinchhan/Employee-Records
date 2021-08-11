@@ -56,12 +56,11 @@ class APIService: NSObject {
                     handler(nil, self.errorString)
                     return
                 }
-                
                 guard let listsJson = dataJson["lists"] as? [[String:Any]] else{
                     handler(nil, self.errorString)
                     return
                 }
-
+                AppManager.shared.saveJsonDataArray(pathName: DataKey.top5BooksFromBestSellers.rawValue, jsonArray: listsJson)
                 let dataArray = Mapper<BestSeller>().mapArray(JSONArray: listsJson)
                 _ = self.getBooksFromBestSellersList(lists: dataArray, list_name_encoded: "")
                 handler(dataArray,nil)

@@ -21,6 +21,9 @@ PODS:
   - RealmSwift (10.9.0):
     - Realm (= 10.9.0)
   - Result (4.1.0)
+  - SDWebImage (5.11.1):
+    - SDWebImage/Core (= 5.11.1)
+  - SDWebImage/Core (5.11.1)
   - SkyFloatingLabelTextField (3.8.0)
   - TSMessages (0.9.13):
     - HexColors (~> 2.3.0)
@@ -31,6 +34,7 @@ DEPENDENCIES:
   - Moya (~> 12.0)
   - ObjectMapper (~> 3.4)
   - RealmSwift
+  - SDWebImage (~> 5.0)
   - SkyFloatingLabelTextField (~> 3.0)
   - TSMessages (from `https://github.com/KrauseFx/TSMessages.git`)
 
@@ -45,6 +49,7 @@ SPEC REPOS:
     - Realm
     - RealmSwift
     - Result
+    - SDWebImage
     - SkyFloatingLabelTextField
 
 EXTERNAL SOURCES:
@@ -66,9 +71,10 @@ SPEC CHECKSUMS:
   Realm: 9feef41ab8230ed706c4dc503fc292594915bf9a
   RealmSwift: 91246183b772e0ea1bf777116c4b8d9939f983b3
   Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
+  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SkyFloatingLabelTextField: 5a338412114808e961fe2d14ea2c5452c8b6e4aa
   TSMessages: eb3cf27b6900684a21bad4fe9ea426e287b8c839
 
-PODFILE CHECKSUM: b4b6aa851b4fb49fdbdeb1557e54c4dc3a7c2cae
+PODFILE CHECKSUM: 01310f041cd34f53152e5394c2d8e9ea9b40c67b
 
 COCOAPODS: 1.10.1

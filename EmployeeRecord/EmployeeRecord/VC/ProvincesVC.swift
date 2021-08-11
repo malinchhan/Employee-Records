@@ -16,32 +16,21 @@ class ProvincesVC: BaseVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Select Province / City"
 
-        self.addTableView(frame: self.screenBound, style: .plain)
-        self.tableView.register(DefaultTableViewCell.self, forCellReuseIdentifier: cellID)
-        self.title = "Select favorite book"
+        self.addTableViewAndSearchBar()
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(dismissScreen))
-
-        self.setupSearchControlller()
-        self.tableView.tableHeaderView = searchController.searchBar
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneClicked))
         
     }
     
-    @objc func doneClicked(){
+    @objc override func doneClicked(){
         self.searchController.isActive = false //avoid crash when search is active 
         self.onProvinceSelected!(provinceSelected)
         self.dismiss(animated: false, completion: nil)
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.searchText.count > 0 {
-            return self.searchData.count
-        }
-        return self.data.count
-    }
+  
     override func updateSearchResults(for searchController: UISearchController) {
         self.searchData.removeAll()
 
@@ -57,14 +46,23 @@ class ProvincesVC: BaseVC {
             self.searchText = ""
         }
         
-        self.tableView.reloadData()
-
+        var noSearchData = false
+        if self.searchText.count > 0 && self.searchData.count == 0 {
+            noSearchData = true
+        }
+        self.refreshScreen(isNoData: noSearchData)
     }
+   
     // MARK: - Table view data source
-
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 60
-//    }
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if self.searchText.count > 0 {
+            return self.searchData.count
+        }
+        return self.data.count
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
+    }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier:cellID , for: indexPath)  as! DefaultTableViewCell

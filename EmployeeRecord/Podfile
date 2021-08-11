@@ -13,6 +13,7 @@ target 'EmployeeRecord' do
   pod 'TSMessages', :git => 'https://github.com/KrauseFx/TSMessages.git'
   pod 'FTIndicator'
   pod 'RealmSwift'
+  pod 'SDWebImage', '~> 5.0'
 
   target 'EmployeeRecordTests' do
     inherit! :search_paths
