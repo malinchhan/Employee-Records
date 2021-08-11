@@ -32,7 +32,7 @@ class BaseVC: UIViewController {
     }
     @objc func doneClicked(){
         if AppManager.shared.selectedBook == nil {
-            Util.showError(text: "Please select 1 favorite book !")
+            Util.showError(text: "Please select your favorite book ")
             return
         }
         if self.searchController != nil {
@@ -146,18 +146,18 @@ extension BaseVC:UITableViewDelegate,UITableViewDataSource{
 }
 extension  BaseVC :  UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate {
     func updateSearchResults(for searchController: UISearchController) {
-        print("search text: \(searchController.searchBar.text)")
+//        print("search text: \(searchController.searchBar.text)")
 
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar){
-        print("search text: \(searchBar.text)")
+//        print("search text: \(searchBar.text)")
         self.searchText = searchBar.text!
         self.searchController.searchBar.endEditing(true)
         
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar){
-        print("cancel click")
+//        print("cancel click")
         searchController.searchBar.showsCancelButton = false
 
         searchBar.endEditing(true)

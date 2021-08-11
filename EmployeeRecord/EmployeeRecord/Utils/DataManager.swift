@@ -27,7 +27,7 @@ class DataManager: NSObject {
             
             let jsonString = employee.toJSONString()
             item.jsonString = jsonString!
-            print(" employee item: \(item)")
+//            print(" employee item: \(item)")
             try! realm.write {
                 realm.add(item, update: .all)
             }

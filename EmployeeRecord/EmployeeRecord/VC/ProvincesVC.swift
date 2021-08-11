@@ -25,6 +25,10 @@ class ProvincesVC: BaseVC {
     }
     
     @objc override func doneClicked(){
+        if provinceSelected == "" {
+            Util.showError(text: "Please select province / city")
+            return
+        }
         self.searchController.isActive = false //avoid crash when search is active 
         self.onProvinceSelected!(provinceSelected)
         self.dismiss(animated: false, completion: nil)

@@ -33,7 +33,7 @@ class BooksVC: BaseVC {
     func requestData(){
         if let listName = self.list_name_encoded {
         
-            print("list name: \(listName)")
+//            print("list name: \(listName)")
             if self.data.count == 0 {
                 Util.showIndicator()
             }

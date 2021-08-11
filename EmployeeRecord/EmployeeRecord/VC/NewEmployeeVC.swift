@@ -494,6 +494,9 @@ extension NewEmployeeVC:UITextFieldDelegate {
             provincesVC.onProvinceSelected = { provinceSelected  in
                 self.allTextFields[3].text = provinceSelected
             }
+            if self.employee != nil {
+                provincesVC.provinceSelected = self.employee?.provinceOrCity ?? ""
+            }
             let nav = UINavigationController(rootViewController: provincesVC)
             self.present(nav, animated: false, completion: nil)
             
