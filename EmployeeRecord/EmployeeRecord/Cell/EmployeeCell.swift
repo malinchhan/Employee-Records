@@ -24,7 +24,7 @@ class EmployeeCell: DefaultTableViewCell {
             if employee!.imageData.count > 0 {
                 profileImageView.image = UIImage(data: employee!.imageData)
             }else{
-                if let dataProfile = AppManager.shared.getMediaData(pathName: "image" + "\(employee?.id ?? 0)"){
+                if let dataProfile = AppManager.shared.getMediaData(pathName: DataKey.employeeProfile.rawValue + "\(employee?.id ?? 0)"){
                     employee?.imageData = dataProfile
                     profileImageView.image = UIImage(data: dataProfile)
                 }

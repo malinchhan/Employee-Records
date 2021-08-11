@@ -31,6 +31,7 @@ class ProvincesVC: BaseVC {
     }
     
     @objc func doneClicked(){
+        self.searchController.isActive = false //avoid crash when search is active 
         self.onProvinceSelected!(provinceSelected)
         self.dismiss(animated: false, completion: nil)
     }

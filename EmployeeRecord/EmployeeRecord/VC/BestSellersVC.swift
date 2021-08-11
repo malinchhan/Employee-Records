@@ -39,7 +39,9 @@ class BestSellersVC: BaseVC {
     }
    
     func requestData(){
-        Util.showIndicator()
+        if self.data.count == 0 {
+            Util.showIndicator()
+        }
         DispatchQueue.global(qos: .background).async {
 
             APIService.shared.getBestSellersList { results, error in
@@ -101,6 +103,8 @@ class BestSellersVC: BaseVC {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.searchController.isActive = false 
+
         var list = self.data[indexPath.row]
         if self.searchText.count > 0 {
             list = self.searchData[indexPath.row]

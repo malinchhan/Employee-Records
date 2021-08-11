@@ -27,7 +27,9 @@ class NewEmployeeVC: BaseVC {
     var employee:Employee?
 
     let dateFormater = DateFormatter.getDateFormatterWith(format:"dd MMMM yyyy")
-    var allowEditing = true
+    var allowEditing:Bool = true
+    var editingMode:Bool = false
+
     var deletedButton : UIButton!
     public var onDataUpdatedOrCreated:(()->Void)?
 
@@ -52,18 +54,22 @@ class NewEmployeeVC: BaseVC {
         self.view.addSubview(scrollView)
         
         if self.employee != nil{ //view mode
-            allowEditing = false
-            self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.refreshToEdit))
+            if editingMode == false {
+                allowEditing = false
+                self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.refreshToEdit))
+            }else{
+                self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(actionButtonClicked(sender:)))
+            }
 
         }else{
+            allowEditing = true
+
             self.navigationItem.leftBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissScreen))
             
             self.navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(actionButtonClicked(sender:)))
-
         }
         self.setupView()
         NotificationCenter.default.addObserver(self, selector: #selector(refreshFavoriteBook), name: Notification.Name("RefreshBookSelected"), object: nil)
-
 
     }
     @objc func refreshFavoriteBook(){
@@ -82,7 +88,9 @@ class NewEmployeeVC: BaseVC {
 
     }
     @objc func refreshToEditOrView(){
-        
+        if self.employee == nil{
+            return
+        }
         imageView.isUserInteractionEnabled = allowEditing
         allTextFields.forEach { tf in
             tf.isUserInteractionEnabled = allowEditing
@@ -98,8 +106,10 @@ class NewEmployeeVC: BaseVC {
 
         }
 
-        self.deletedButton.isHidden = !allowEditing
-
+        if self.deletedButton != nil {
+            self.deletedButton.isHidden = !allowEditing
+        }
+        editingMode == allowEditing
     }
    
     func setupView(){
@@ -171,13 +181,15 @@ class NewEmployeeVC: BaseVC {
         
         
 
-        if self.employee != nil && self.allowEditing == false {
+        if self.employee != nil  {
+            
             deletedButton = UIButton(frame: CGRect(x: 20, y: yView, width: screenBound.width - 40, height: 50))
             deletedButton.addTarget(self, action: #selector(self.deleteClicked(sender:)), for: .touchUpInside)
             scrollView.addSubview(deletedButton)
-            //show delete button
             deletedButton.setButtonWith(backgroundColor: UIColor.red, textColor:.white , text: "Delete", fontSize: 18, isRound: true)
-            deletedButton.isHidden = true
+            if self.allowEditing == false {
+                deletedButton.isHidden = true
+            }
 
         }
         
@@ -191,7 +203,7 @@ class NewEmployeeVC: BaseVC {
             if (self.employee?.imageData.count)! > 0 {
                 imageView.image = UIImage(data: self.employee!.imageData)
                 imageData = self.employee?.imageData
-            }else if let dataProfile = AppManager.shared.getMediaData(pathName: DataKey.employeeProfile.rawValue + "\(employee?.id ?? 0)"){
+            }else if  let dataProfile = AppManager.shared.getMediaData(pathName: DataKey.employeeProfile.rawValue + "\(employee?.id ?? 0)"){
                 employee?.imageData = dataProfile
                 imageView.image = UIImage(data: dataProfile)
                 imageData = dataProfile
@@ -373,11 +385,10 @@ class NewEmployeeVC: BaseVC {
                 if employee == nil { //new employee
                     let count = DataManager.shared.countEmployees()
                     currentEmployee.id = count + 1
-                    AppManager.shared.saveMediaData(pathName: imageFileName + "\(count)", data: data)
+                    AppManager.shared.saveMediaData(pathName: imageFileName + "\(currentEmployee.id)", data: data)
 
                 }else{
                     AppManager.shared.saveMediaData(pathName: imageFileName + "\(employee!.id)", data: data)
-
                 }
               
             }

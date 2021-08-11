@@ -65,17 +65,17 @@ class BaseVC: UIViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
-        searchController.searchBar.searchBarStyle = .default
+        searchController.searchBar.searchBarStyle = .minimal
         
 
         //update textfield font
         let textFieldInSearchBar = self.searchController.searchBar.value(forKey: "searchField") as? UITextField
         textFieldInSearchBar?.font = UIFont.systemFont(ofSize: 18)
         textFieldInSearchBar?.textColor = UIColor.black
-        textFieldInSearchBar?.backgroundColor = .lightGrayColor()
+        textFieldInSearchBar?.backgroundColor = .lighterGrayColor()
         let placeHolder = textFieldInSearchBar?.value(forKey: "placeholderLabel") as? UILabel
         placeHolder?.font  = UIFont.systemFont(ofSize: 15)
-        placeHolder?.textColor = UIColor.defaultBlueColor().withAlphaComponent(0.8)
+        placeHolder?.textColor = UIColor.gray
         placeHolder?.text = "Search"
 
 //        remove search icon

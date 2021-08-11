@@ -22,7 +22,6 @@ class EmployeesVC: BaseVC {
         self.title = "Employees"
         self.addTableView(frame: screenBound, style: .plain)
         self.tableView.register(EmployeeCell.self, forCellReuseIdentifier: employeeCellID)
-        
         self.tableView.tableFooterView  = UIView()
 
         //add plus button
@@ -58,7 +57,16 @@ class EmployeesVC: BaseVC {
         nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: false, completion: nil)
     }
-    
+    func editEmployee(employee:Employee){
+        let vc = NewEmployeeVC()
+        vc.editingMode = true
+        vc.employee = employee
+        vc.onDataUpdatedOrCreated = {
+            self.refreshDataFromLocalDB()
+        }
+        self.navigationController?.pushViewController(vc, animated: false)
+        
+    }
 
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -85,6 +93,32 @@ class EmployeesVC: BaseVC {
         detailVC.employee = self.data[indexPath.row]
         self.navigationController?.pushViewController(detailVC, animated: false)
     }
+  
 
+     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        true
+    }
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let action1 = UITableViewRowAction(style: .default, title: "Edit", handler: {
+            (action, indexPath) in
+            print("Edit")
+            self.editEmployee(employee: self.data[indexPath.row])
+
+        })
+        action1.backgroundColor = UIColor.lightGray
+        let action2 = UITableViewRowAction(style: .destructive, title: "Delete", handler: {
+            (action, indexPath) in
+            print("Delete")
+            //show popup to delete
+            self.showAlertMessage(title: nil, message: "Delete this employee ?", actionTitle: "Delete") {
+                //delete local data
+                DataManager.shared.removeEmployee(employee: self.data[indexPath.row])
+                self.refreshDataFromLocalDB()
+            }
+            
+        })
+        return [action1, action2]
+    }
+    
    
 }

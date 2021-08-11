@@ -35,7 +35,6 @@ class Employee: BaseModel {
  
     override func mapping(map: Map) {
         id <- map["id"]
-        imageData <- map["image"]
         firstName <- map["firstName"]
         middleName <- map["middleName"]
         lastName <- map["lastName"]

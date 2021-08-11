@@ -36,6 +36,8 @@ class BooksVC: BaseVC {
         self.requestData()
     }
     @objc func doneClicked(){
+        self.searchController.isActive = false //avoid crash when search is active
+
         NotificationCenter.default.post(name: Notification.Name("RefreshBookSelected"), object: nil)
         super.dismiss(animated: false, completion: nil)
     }
@@ -45,7 +47,9 @@ class BooksVC: BaseVC {
         if let listName = self.list_name_encoded {
         
             print("list name: \(listName)")
-            Util.showIndicator()
+            if self.data.count == 0 {
+                Util.showIndicator()
+            }
             DispatchQueue.global(qos: .background).async {
                 APIService.shared.getDetailBestSellers(list_name_encoded: listName) { results, error in
                     DispatchQueue.main.async {
