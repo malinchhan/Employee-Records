@@ -98,6 +98,9 @@ class Top5BooksVC: BaseVC {
    
 
     // MARK: - Table view data source
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 160
+    }
     override func numberOfSections(in tableView: UITableView) -> Int {
         if self.searchText.count > 0 {
             return 1

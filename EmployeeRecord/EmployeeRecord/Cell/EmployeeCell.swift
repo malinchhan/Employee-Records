@@ -49,31 +49,11 @@ class EmployeeCell: DefaultTableViewCell {
         self.addSubview(genderLbl)
         self.addSubview(dateLbl)
         
-//        profileImageView.constrainWidth(80)
-//        profileImageView.constrainHeight(80)
         profileImageView.contentMode = .scaleAspectFill
         nameLbl.textColor =  UIColor.black
         genderLbl.textColor = .darkGray
         dateLbl.textColor = .darkGray
-//        dateLbl.constrainHeight(20)
         dateLbl.textAlignment = .right
-//
-//        let verticalStack = VerticalStackView(arrangedSubviews: [
-//                    nameLbl,
-//                    genderLbl,
-//                    dateLbl
-//                ])
-//        verticalStack.distribution = .fillEqually
-//        verticalStack.spacing = 10
-//
-//
-//        let stack = UIStackView(arrangedSubviews: [profileImageView,verticalStack])
-//        stack.spacing = 10
-//        addSubview(stack)
-//        stack.fillSuperview(padding: .init(top: 10, left: 20, bottom: 10, right: 20))
-        
-      
-
 
     }
 
