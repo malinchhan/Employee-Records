@@ -32,7 +32,6 @@ class BestSellersVC: BaseVC {
         buttonRight.addTarget(self, action: #selector(top5BooksClicked), for: .touchUpInside)
         self.navigationItem.rightBarButtonItem =  UIBarButtonItem(customView: buttonRight)
         
-        //when get data from Realm, no key to sort same as data from server
 //        self.data = DataManager.shared.getAllBestSellers()
         
         //So we get data we save in FileManager

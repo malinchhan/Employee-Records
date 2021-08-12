@@ -109,7 +109,7 @@ class NewEmployeeVC: BaseVC {
         if self.deletedButton != nil {
             self.deletedButton.isHidden = !allowEditing
         }
-        editingMode == allowEditing
+        editingMode = allowEditing
     }
    
     func setupView(){

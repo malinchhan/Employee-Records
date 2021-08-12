@@ -14,6 +14,7 @@ class BaseVC: UIViewController {
     var searchController : UISearchController!
     var searchText:String = ""
 
+    // MARK: - Main functions
     override func viewDidLoad() {
         super.viewDidLoad()
 

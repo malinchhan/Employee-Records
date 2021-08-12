@@ -53,14 +53,14 @@ class BookWithCoverCell: DefaultTableViewCell {
             authorLabel,
             desLabel
                 ])
-//        verticalStack.distribution = .fillProportionally
+        verticalStack.distribution = .fillProportionally
         verticalStack.spacing = 5
 
 
         let stack = UIStackView(arrangedSubviews: [coverImageView,verticalStack])
         stack.spacing = 10
         addSubview(stack)
-        stack.fillSuperview(padding: .init(top: 10, left: 10, bottom: 10, right: 20))
+        stack.fillSuperview(padding: .init(top: 10, left: 10, bottom: 10, right: 30))
         
     }
 

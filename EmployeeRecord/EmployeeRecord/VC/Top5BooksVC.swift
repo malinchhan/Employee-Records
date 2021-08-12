@@ -19,8 +19,6 @@ class Top5BooksVC: BaseVC {
         self.title = "Top 5 books"
        
         self.addTableViewAndSearchBar()
-        self.searchController.searchResultsUpdater = self
-        self.searchController.delegate = self
         
         self.tableView.register(BookWithCoverCell.self, forCellReuseIdentifier: cellID)
         let localData = AppManager.shared.getJsonArrayData(pathName: DataKey.top5BooksFromBestSellers.rawValue)

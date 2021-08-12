@@ -76,7 +76,6 @@ class ProvincesVC: BaseVC {
         }
 
         cell.textLabel?.text = province
-//        cell.textLabel?.font = .systemFont(ofSize: 14)
         cell.textLabel?.textColor = .black
 
         cell.accessoryType = .none
