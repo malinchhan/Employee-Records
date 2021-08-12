@@ -40,7 +40,7 @@ class DataManager: NSObject {
 
         do {
             let realm = try Realm()
-            let items = realm.objects(EmployeeItem.self).reversed()
+            let items = realm.objects(EmployeeItem.self).sorted(byKeyPath: "updated_at", ascending: false)
 
             if items.count == 0 {
                return []
